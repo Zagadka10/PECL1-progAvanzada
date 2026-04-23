@@ -1,0 +1,42 @@
+-J-Duser.language=
+-J-Duser.country=
+@options
+@packages
+--no-fonts
+-encoding
+'UTF-8'
+-protected
+--release
+25
+-sourcepath
+'C:/Users/hecto/Documents/Hector_Albarran/Programación avz/PECL/src/main/java'
+-author
+-bottom
+'Copyright &#169; 2026. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'C:/Users/hecto/Documents/Hector_Albarran/Programación avz/PECL/target/reports/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'PECL 1.0-SNAPSHOT API'
+-use
+-version
+-windowtitle
+'PECL 1.0-SNAPSHOT API'
+com.mycompany.pecl
+C:\Users\hecto\Documents\Hector_Albarran\Programación avz\PECL\src\main\java = 1776623526328
+C:\Users\hecto\Documents\Hector_Albarran\Programación avz\PECL\target\reports\apidocs\allclasses-index.html = 1776624594188
+C:\Users\hecto\Documents\Hector_Albarran\Programación avz\PECL\target\reports\apidocs\allpackages-index.html = 1776624594190
+C:\Users\hecto\Documents\Hector_Albarran\Programación avz\PECL\target\reports\apidocs\element-list = 1776624594153
+C:\Users\hecto\Documents\Hector_Albarran\Programación avz\PECL\target\reports\apidocs\help-doc.html = 1776624594208
+C:\Users\hecto\Documents\Hector_Albarran\Programación avz\PECL\target\reports\apidocs\index-all.html = 1776624594201
+C:\Users\hecto\Documents\Hector_Albarran\Programación avz\PECL\target\reports\apidocs\index.html = 1776624594204
+C:\Users\hecto\Documents\Hector_Albarran\Programación avz\PECL\target\reports\apidocs\member-search-index.js = 1776624594194
+C:\Users\hecto\Documents\Hector_Albarran\Programación avz\PECL\target\reports\apidocs\module-search-index.js = 1776624594191
+C:\Users\hecto\Documents\Hector_Albarran\Programación avz\PECL\target\reports\apidocs\overview-tree.html = 1776624594181
+C:\Users\hecto\Documents\Hector_Albarran\Programación avz\PECL\target\reports\apidocs\package-search-index.js = 1776624594192
+C:\Users\hecto\Documents\Hector_Albarran\Programación avz\PECL\target\reports\apidocs\search.html = 1776624594202
+C:\Users\hecto\Documents\Hector_Albarran\Programación avz\PECL\target\reports\apidocs\tag-search-index.js = 1776624594195
+C:\Users\hecto\Documents\Hector_Albarran\Programación avz\PECL\target\reports\apidocs\type-search-index.js = 1776624594193
