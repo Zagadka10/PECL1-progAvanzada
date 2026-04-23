@@ -4,15 +4,15 @@
  */
 package logica;
 
-import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  *
  * @author hecto
  */
 public class Zona {
-    private ArrayList<Niño> niños = new ArrayList<>();
-    private ArrayList<Demogorgon> demos = new ArrayList<>();
+    private CopyOnWriteArrayList<Niño> niños = new CopyOnWriteArrayList<>();
+    private CopyOnWriteArrayList<Demogorgon> demos = new CopyOnWriteArrayList<>();
     
     public void entrar(Niño n){
         niños.add(n);
@@ -21,4 +21,5 @@ public class Zona {
     public void salir(Niño n){
         niños.remove(n);
     }
+    
 }
