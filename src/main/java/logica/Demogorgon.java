@@ -8,6 +8,6 @@ package logica;
  *
  * @author hecto
  */
-public class Demogorgon {
+public class Demogorgon extends Thread{
     
 }
