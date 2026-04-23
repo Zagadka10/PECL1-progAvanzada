@@ -9,5 +9,5 @@ package logica;
  * @author hecto
  */
 public class Portal {
-    
+                        
 }
