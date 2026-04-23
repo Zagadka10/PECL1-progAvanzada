@@ -4,10 +4,18 @@
  */
 package logica;
 
+import java.util.concurrent.CyclicBarrier;
+
 /**
  *
  * @author hecto
  */
 public class Portal {
-                        
+
+    private final String nombre;
+    private final Zona zonaDestino;
+
+    public void bajarUpsideDown() {
+
+    }
 }

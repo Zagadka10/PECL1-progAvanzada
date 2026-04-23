@@ -1,19 +1,12 @@
 
 package logica;
 
-<<<<<<< HEAD
 /**
  *
  * @author hecto
  */
 public class Niño extends Thread {
-=======
-public class Niño extends Thread{
     private boolean capturado = false;
-    private final String id;
-    private final Zona sotanoByers, callePrincipal;
->>>>>>> 880138890e59a9347df0fc1559159d92ad96f6d6
-
     private final String id;
     private final Zona sotanoByers, callePrincipal, radioWSQK, colmena;
 
@@ -44,23 +37,15 @@ public class Niño extends Thread{
         notifyAll(); // Despierta al niño para que salga del wait() y siga su ciclo
     }
 
-
     @Override
     public void run() {
         try {
             //Inician actividad en calle principal
             callePrincipal.entrar(this);
-<<<<<<< HEAD
             Thread.sleep((3 + (int) (Math.random() * 3)) * 1000); //3-5s
             callePrincipal.salir(this);
 
             while (!Thread.currentThread().isInterrupted()) {
-
-=======
-            Thread.sleep((1 + (int) (Math.random() * 2)) * 1000); //1-2s
-            callePrincipal.salir(this);
-            while (!Thread.currentThread().isInterrupted()) {
->>>>>>> 880138890e59a9347df0fc1559159d92ad96f6d6
                 //accede a sotano byers
                 sotanoByers.entrar(this);
                 Thread.sleep((1 + (int) (Math.random() * 2)) * 1000); //1-2s
