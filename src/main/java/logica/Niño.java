@@ -9,14 +9,17 @@ public class Niño extends Thread {
     private boolean capturado = false;
     private final String id;
     private final Zona sotanoByers, callePrincipal, radioWSQK, colmena;
+    private final Portal[] portales;
 
-    public Niño(String id, Zona sotanoByers, Zona callePrincipal, Zona radioWSQK, Zona colmena) {
+    public Niño(String id, Zona sotanoByers, Zona callePrincipal, Zona radioWSQK, Zona colmena, Portal[] portales) {
         this.id = String.format("N%04d", id);
         this.sotanoByers = sotanoByers;
         this.callePrincipal = callePrincipal;
         this.radioWSQK = radioWSQK;
         this.colmena = colmena;
+        this.portales = portales;
     }
+
     // El Demogorgon llama a este método si gana el combate 
     public synchronized void serCapturado() {
         this.capturado = true;
@@ -51,8 +54,9 @@ public class Niño extends Thread {
                 Thread.sleep((1 + (int) (Math.random() * 2)) * 1000); //1-2s
                 sotanoByers.salir(this);
 
-                //Selecciona portal y espera quorum segun dnd vaya
-                
+                //Selecciona portal, espera quorum segun dnd vaya y entra
+                Portal portalElegido = portales[(int)Math.random()*portales.length];
+                portalElegido.bajarUpsideDown(this);
                 
                 //Movidas del Upside-down
                 
@@ -61,8 +65,6 @@ public class Niño extends Thread {
                 
 
                 //Radio WSQK
-                
-                
                 radioWSQK.entrar(this);
                 Thread.sleep((2 + (int) (Math.random() * 3)) * 1000); //2-4s
                 radioWSQK.salir(this);
