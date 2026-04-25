@@ -57,12 +57,14 @@ public class Niño extends Thread {
                 //Selecciona portal, espera quorum segun dnd vaya y entra
                 Portal portalElegido = portales[(int)Math.random()*portales.length];
                 portalElegido.bajarUpsideDown(this);
+                Zona zonaElegida = portalElegido.getZonaDestino();
+                zonaElegida.entrar(this);
                 
                 //Movidas del Upside-down
-                
-                
+                                
                 //vuelta a hawkins
-                
+                zonaElegida.salir(this);
+                portalElegido.volverHawkins(this);
 
                 //Radio WSQK
                 radioWSQK.entrar(this);

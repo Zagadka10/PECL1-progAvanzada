@@ -23,7 +23,7 @@ public class Portal {
     private final Condition esperaBajada = cerrojo.newCondition();
     private final Condition esperaSubida = cerrojo.newCondition();
     private boolean portalOcupado;
-    private int niñosvuelta = 0;
+    private int niñosVuelta = 0;
 
     public Portal(String nombre, Zona zonaDestino, int numeroGrupo) {
         this.nombre = nombre;
@@ -37,7 +37,7 @@ public class Portal {
             quorum.await();
             cerrojo.lock();
             try {
-                while (portalOcupado || niñosvuelta > 0) {
+                while (portalOcupado || niñosVuelta > 0) {
                     esperaBajada.await();
                 }
                 portalOcupado = true;
@@ -51,7 +51,7 @@ public class Portal {
             cerrojo.lock();
             try{
                 portalOcupado = false;
-                if (niñosvuelta > 0){
+                if (niñosVuelta > 0){
                     esperaSubida.signal();
                 }else{
                     esperaBajada.signal();
@@ -64,6 +64,34 @@ public class Portal {
             System.out.println(b.getMessage());
         }
     }
+    
+    public void volverHawkins(Niño n) throws InterruptedException{
+        cerrojo.lock();
+        try{
+            niñosVuelta++;
+            while(portalOcupado){
+                esperaSubida.await();
+            }
+            portalOcupado = true;
+        }finally{
+            cerrojo.unlock();
+        }
+        
+        Thread.sleep(1000);
+        
+        cerrojo.lock();
+        try{
+            portalOcupado = false;
+            niñosVuelta--;
+            if(niñosVuelta > 0){
+                esperaSubida.signal();
+            }else{
+                esperaBajada.signal();
+            }
+        }finally{
+            cerrojo.unlock();
+        }
+    }
 
     public Zona getZonaDestino() {
         return zonaDestino;
@@ -72,6 +100,5 @@ public class Portal {
     public String getNombre() {
         return nombre;
     }
-    
-    
+  
 }
