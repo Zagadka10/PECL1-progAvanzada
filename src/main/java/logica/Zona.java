@@ -38,6 +38,10 @@ public class Zona {
     public void salir(Demogorgon d) {
         demos.remove(d);
     }
+
+    public String getId() {
+        return id;
+    }
     
     // Gestión de Demogorgons (Sincronizada) [cite: 43]
     public synchronized void entrarDemogorgon(Demogorgon d) { demos.add(d); }

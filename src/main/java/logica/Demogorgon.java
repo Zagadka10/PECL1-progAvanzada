@@ -9,14 +9,16 @@ public class Demogorgon extends Thread {
     private int capturas;
     private Zona zonaActual;
     private final Random random;
+    private final HawkinsLog log; 
     
 
-    public Demogorgon(String id, ArrayList<Zona> zonasUpsideDown, Zona colmena) {
+    public Demogorgon(String id, ArrayList<Zona> zonasUpsideDown, Zona colmena,HawkinsLog log) {
         this.id = id;
         this.zonasUpsideDown = zonasUpsideDown;
         this.colmena = colmena;
         this.capturas = 0;
         this.random = new Random();
+        this.log = log;
     }
 
     public String getIdentificador() { return id; }

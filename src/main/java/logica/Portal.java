@@ -24,11 +24,13 @@ public class Portal {
     private final Condition esperaSubida = cerrojo.newCondition();
     private boolean portalOcupado;
     private int niñosVuelta = 0;
+    private HawkinsLog log;
 
-    public Portal(String nombre, Zona zonaDestino, int numeroGrupo) {
+    public Portal(String nombre, Zona zonaDestino, int numeroGrupo, HawkinsLog log) {
         this.nombre = nombre;
         this.zonaDestino = zonaDestino;
         this.quorum = new CyclicBarrier(numeroGrupo);
+        this.log = log;
     }
 
     public void bajarUpsideDown(Niño niño) throws InterruptedException {

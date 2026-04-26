@@ -43,7 +43,7 @@ public class HawkinsLog {
 
     public void escribir(String msj) {
         String marcatiempo = LocalDateTime.now().format(formatoFecha);
-        String msjfinal = "[" + marcatiempo + "] " + msj;
+        String msjfinal = "[" + marcatiempo + "] " + msj + ".";
 
         try {
             colaMensajes.put(msjfinal);
@@ -64,7 +64,7 @@ public class HawkinsLog {
             }
         } catch (InterruptedException ie) {
             Thread.currentThread().interrupt();
-            System.out.println(ie.getMessage());
+            System.out.println("Problema r/w de " + ie.getMessage());
         } finally {
             if (escritor != null) {
                 escritor.close();
