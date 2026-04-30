@@ -1,68 +1,87 @@
 package logica;
 
-import java.util.concurrent.BrokenBarrierException;
-import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.locks.*;
 
-/**
- *
- * @author hecto
- */
 public class Portal {
-
     private final String nombre;
     private final Zona zonaDestino;
-
-    private final CyclicBarrier quorum;
+    private final int tamanoGrupo;
 
     private final ReentrantLock cerrojo = new ReentrantLock();
-    private final Condition esperaBajada = cerrojo.newCondition();
+    // Colas de espera
+    private final Condition esperaFormarGrupo = cerrojo.newCondition();
+    private final Condition esperaCruzarBajada = cerrojo.newCondition();
     private final Condition esperaSubida = cerrojo.newCondition();
-    private boolean portalOcupado;
+    
+    // Contadores de estado
+    private int niñosEsperandoBajar = 0;
+    private int niñosCruzandoBajada = 0;
     private int niñosVuelta = 0;
+    private boolean portalOcupado = false;
+    private boolean grupoCruzando = false; 
+
     private HawkinsLog log;
 
     public Portal(String nombre, Zona zonaDestino, int numeroGrupo, HawkinsLog log) {
         this.nombre = nombre;
         this.zonaDestino = zonaDestino;
-        this.quorum = new CyclicBarrier(numeroGrupo);
+        this.tamanoGrupo = numeroGrupo;
         this.log = log;
     }
 
     public void bajarUpsideDown(Niño niño) throws InterruptedException {
+        cerrojo.lock();
         try {
-            //formamos los grupos
-            quorum.await();
-            cerrojo.lock();
-            try {
-                while (portalOcupado || niñosVuelta > 0) {
-                    esperaBajada.await();
-                }
-                portalOcupado = true;
-            } finally {
-                cerrojo.unlock();
-            }
+            niñosEsperandoBajar++;
             
-            Thread.sleep(1000);
-            
-            //Libera los  portales con prioridad.
-            cerrojo.lock();
-            try{
-                portalOcupado = false;
-                if (niñosVuelta > 0){
-                    esperaSubida.signal();
-                }else{
-                    esperaBajada.signal();
+            // 1. Esperar a que haya quorum Y que ningún otro grupo esté cruzando
+            while (niñosEsperandoBajar < tamanoGrupo || grupoCruzando) {
+                // Si justo yo completo el grupo y nadie cruza, despierto a los demás
+                if (niñosEsperandoBajar >= tamanoGrupo && !grupoCruzando) {
+                    grupoCruzando = true;
+                    niñosCruzandoBajada = tamanoGrupo; // Registramos cuántos van a cruzar
+                    esperaFormarGrupo.signalAll(); // Despierta al resto del grupo
+                    break; 
                 }
-            }finally{
-                cerrojo.unlock();
+                esperaFormarGrupo.await();
             }
-        } catch (BrokenBarrierException b) {
-            Thread.currentThread().interrupt();
-            System.out.println(b.getMessage());
+
+            niñosEsperandoBajar--; // Ya formo parte del grupo que cruza
+
+            // 2. Esperar mi turno individual para cruzar (y ceder prioridad a los que suben)
+            while (portalOcupado || niñosVuelta > 0) {
+                esperaCruzarBajada.await();
+            }
+            portalOcupado = true;
+        } finally {
+            cerrojo.unlock();
+        }
+        
+        // 3. Cruzar (Fuera del lock para que no se congele todo el programa)
+        Thread.sleep(1000); 
+        
+        cerrojo.lock();
+        try {
+            portalOcupado = false;
+            niñosCruzandoBajada--;
+
+            // Si fui el último del grupo en cruzar, el portal queda libre para otro grupo
+            if (niñosCruzandoBajada == 0) {
+                grupoCruzando = false;
+                esperaFormarGrupo.signalAll(); // Aviso a los que intentan formar nuevo grupo
+            }
+
+            // Gestión de prioridades al liberar el portal
+            if (niñosVuelta > 0) {
+                esperaSubida.signal(); // Prioridad a los que vuelven
+            } else {
+                esperaCruzarBajada.signal(); // Paso al siguiente del grupo que baja
+            }
+        } finally {
+            cerrojo.unlock();
         }
     }
-    
+
     public void volverHawkins(Niño n) throws InterruptedException{
         cerrojo.lock();
         try{
@@ -81,16 +100,18 @@ public class Portal {
         try{
             portalOcupado = false;
             niñosVuelta--;
+            
+            // Si hay más esperando subir, les doy paso. Si no, doy paso a los que bajan.
             if(niñosVuelta > 0){
                 esperaSubida.signal();
             }else{
-                esperaBajada.signal();
+                esperaCruzarBajada.signal(); 
             }
         }finally{
             cerrojo.unlock();
         }
     }
-
+    
     public Zona getZonaDestino() {
         return zonaDestino;
     }
@@ -98,5 +119,4 @@ public class Portal {
     public String getNombre() {
         return nombre;
     }
-  
 }

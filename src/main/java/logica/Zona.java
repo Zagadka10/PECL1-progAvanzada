@@ -1,11 +1,11 @@
 package logica;
 
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.ArrayList;
 
 
 public class Zona {
     private String id;
-    //Nota: Si el programa va lento, sobre todo en calle principal usar ConcurrentHashMap.newKeySet()
     private CopyOnWriteArrayList<Niño> niños = new CopyOnWriteArrayList<>();
     private CopyOnWriteArrayList<Demogorgon> demos = new CopyOnWriteArrayList<>();
 
@@ -43,7 +43,18 @@ public class Zona {
         return id;
     }
     
-    // Gestión de Demogorgons (Sincronizada) [cite: 43]
+    // Gestión de Demogorgons 
     public synchronized void entrarDemogorgon(Demogorgon d) { demos.add(d); }
     public synchronized void salirDemogorgon(Demogorgon d) { demos.remove(d); }
+    
+    // Método para que Eleven saque niños de la Colmena
+    public synchronized ArrayList<Niño> rescatarNiños(int maximo) {
+        ArrayList<Niño> rescatados = new ArrayList<>();
+        int cantidad = Math.min(maximo, niños.size());
+        for (int i = 0; i < cantidad; i++) {
+            // remove(0) va sacando siempre al primero de la lista
+            rescatados.add(niños.remove(0)); 
+        }
+        return rescatados;
+    }
 }
