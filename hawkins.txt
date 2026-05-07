@@ -1,0 +1,83 @@
+[2026-05-07 21:16:30] INICIA LA BATALLA DE HAWKINS.
+[2026-05-07 21:16:30] Vecna ha soltado al Demogorgon Alpha.
+[2026-05-07 21:16:32] N0001 entra a Sotano Byers..
+[2026-05-07 21:16:33] N0004 entra a Sotano Byers..
+[2026-05-07 21:16:33] N0002 entra a Sotano Byers..
+[2026-05-07 21:16:34] N0003 entra a Sotano Byers..
+[2026-05-07 21:16:34] N0005 entra a Sotano Byers..
+[2026-05-07 21:16:37] N0006 entra a Sotano Byers..
+[2026-05-07 21:16:40] N0007 entra a Sotano Byers..
+[2026-05-07 21:17:13] INICIA LA BATALLA DE HAWKINS.
+[2026-05-07 21:17:13] Vecna ha soltado al Demogorgon Alpha.
+[2026-05-07 21:17:15] N0001 entra a Sotano Byers..
+[2026-05-07 21:17:15] N0002 entra a Sotano Byers..
+[2026-05-07 21:17:18] N0003 entra a Sotano Byers..
+[2026-05-07 21:17:20] N0004 entra a Sotano Byers..
+[2026-05-07 21:17:20] N0005 entra a Sotano Byers..
+[2026-05-07 21:17:21] N0007 entra a Sotano Byers..
+[2026-05-07 21:17:21] N0002 explorando Alcantarillado..
+[2026-05-07 21:17:21] N0002 regresa a Hawkins con sangre..
+[2026-05-07 21:17:21] N0006 entra a Sotano Byers..
+[2026-05-07 21:17:22] N0002 entra a Radio WSQK..
+[2026-05-07 21:17:24] N0002 entra a la CALLE PRINCIPAL..
+[2026-05-07 21:17:24] N0008 entra a Sotano Byers..
+[2026-05-07 21:17:24] N0010 entra a Sotano Byers..
+[2026-05-07 21:17:25] N0007 explorando Alcantarillado..
+[2026-05-07 21:17:25] N0007 regresa a Hawkins con sangre..
+[2026-05-07 21:17:25] N0009 entra a Sotano Byers..
+[2026-05-07 21:17:26] N0011 entra a Sotano Byers..
+[2026-05-07 21:17:26] N0007 entra a Radio WSQK..
+[2026-05-07 21:17:26] N0006 explorando Bosque..
+[2026-05-07 21:17:26] N0006 regresa a Hawkins con sangre..
+[2026-05-07 21:17:27] N0006 entra a Radio WSQK..
+[2026-05-07 21:17:28] N0012 entra a Sotano Byers..
+[2026-05-07 21:17:28] N0007 entra a la CALLE PRINCIPAL..
+[2026-05-07 21:17:28] N0006 entra a la CALLE PRINCIPAL..
+[2026-05-07 21:17:30] N0008 explorando Alcantarillado..
+[2026-05-07 21:17:30] N0008 regresa a Hawkins con sangre..
+[2026-05-07 21:17:30] N0013 entra a Sotano Byers..
+[2026-05-07 21:17:30] N0014 entra a Sotano Byers..
+[2026-05-07 21:17:31] N0008 entra a Radio WSQK..
+[2026-05-07 21:17:31] N0002 regresa a Hawkins con sangre..
+[2026-05-07 21:17:32] N0016 entra a Sotano Byers..
+[2026-05-07 21:17:32] N0011 explorando Alcantarillado..
+[2026-05-07 21:17:32] N0011 regresa a Hawkins con sangre..
+[2026-05-07 21:17:33] N0017 entra a Sotano Byers..
+[2026-05-07 21:17:33] N0002 entra a Radio WSQK..
+[2026-05-07 21:17:33] N0008 entra a la CALLE PRINCIPAL..
+[2026-05-07 21:17:33] N0015 entra a Sotano Byers..
+[2026-05-07 21:17:33] N0007 regresa a Hawkins con sangre..
+[2026-05-07 21:17:34] N0011 entra a Radio WSQK..
+[2026-05-07 21:17:34] N0006 regresa a Hawkins con sangre..
+[2026-05-07 21:17:35] N0002 entra a la CALLE PRINCIPAL..
+[2026-05-07 21:17:35] N0007 entra a Radio WSQK..
+[2026-05-07 21:17:35] N0006 entra a Radio WSQK..
+[2026-05-07 21:17:36] N0019 entra a Sotano Byers..
+[2026-05-07 21:17:36] N0012 explorando Alcantarillado..
+[2026-05-07 21:17:36] N0012 regresa a Hawkins con sangre..
+[2026-05-07 21:17:36] N0014 explorando Bosque..
+[2026-05-07 21:17:36] N0014 regresa a Hawkins con sangre..
+[2026-05-07 21:17:36] N0011 entra a la CALLE PRINCIPAL..
+[2026-05-07 21:17:36] N0018 entra a Sotano Byers..
+[2026-05-07 21:17:37] N0013 explorando Alcantarillado..
+[2026-05-07 21:17:37] N0013 regresa a Hawkins con sangre..
+[2026-05-07 21:17:37] N0006 entra a la CALLE PRINCIPAL..
+[2026-05-07 21:17:37] N0014 entra a Radio WSQK..
+[2026-05-07 21:17:37] N0017 explorando Centro Comercial..
+[2026-05-07 21:17:37] N0017 regresa a Hawkins con sangre..
+[2026-05-07 21:17:38] N0020 entra a Sotano Byers..
+[2026-05-07 21:17:38] N0012 entra a Radio WSQK..
+[2026-05-07 21:17:38] N0014 entra a la CALLE PRINCIPAL..
+[2026-05-07 21:17:38] N0016 explorando Centro Comercial..
+[2026-05-07 21:17:38] N0016 regresa a Hawkins con sangre..
+[2026-05-07 21:17:39] N0019 explorando Bosque..
+[2026-05-07 21:17:39] N0019 regresa a Hawkins con sangre..
+[2026-05-07 21:17:39] N0007 entra a la CALLE PRINCIPAL..
+[2026-05-07 21:17:39] N0002 entra a Sotano Byers..
+[2026-05-07 21:17:39] N0013 entra a Radio WSQK..
+[2026-05-07 21:17:39] N0012 entra a la CALLE PRINCIPAL..
+[2026-05-07 21:17:39] N0021 entra a Sotano Byers..
+[2026-05-07 21:17:39] N0017 entra a Radio WSQK..
+[2026-05-07 21:17:39] N0013 entra a la CALLE PRINCIPAL..
+[2026-05-07 21:17:40] N0019 entra a Radio WSQK..
+[2026-05-07 21:17:40] N0019 entra a la CALLE PRINCIPAL..

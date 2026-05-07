@@ -129,7 +129,7 @@ public class Demogorgon extends Thread {
         if (capturaExitosa) {
             zonaActual.salir(objetivo);
             colmena.entrar(objetivo);
-            objetivo.setCapturado(true);    //cambiamos a booleano para muchos mini-sleeps
+            objetivo.serCapturado();    
 
             long tiempoDeposito = 500 + random.nextInt(501);
             Thread.sleep(tiempoDeposito);
