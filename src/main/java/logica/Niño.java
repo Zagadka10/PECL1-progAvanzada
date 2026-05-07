@@ -48,16 +48,16 @@ public class Niño extends Thread {
         try {
             //Inician actividad en calle principal
             callePrincipal.entrar(this);
-            Thread.sleep((3 + (int) (Math.random() * 3)) * 1000); //3-5s
+            Thread.sleep(3 + (int) (Math.random() * 3000)); //3-5s
             callePrincipal.salir(this);
 
             while (!Thread.currentThread().isInterrupted()) {
                 //accede a sotano byers
                 sotanoByers.entrar(this);
                 log.escribir(id + " entra a Sotano Byers.");
-                Thread.sleep((1 + (int) (Math.random() * 2)) * 1000); //1-2s
+                Thread.sleep(1000 + (int)(Math.random() * 2000)); //1-2s
                 sotanoByers.salir(this);
-
+                
                 //Selecciona portal, espera quorum segun dnd vaya y entra
                 Portal portalElegido = portales[(int) (Math.random() * portales.length)];
                 portalElegido.bajarUpsideDown(this);
@@ -73,7 +73,7 @@ public class Niño extends Thread {
                     colmena.entrar(this);
                     log.escribir("¡¡¡El niño " + id + "ha sido capturado!!!");
                 }
-                                
+                
                 //vuelta a hawkins
                 zonaElegida.salir(this);
                 log.escribir(id + " regresa a Hawkins con sangre.");
@@ -82,13 +82,13 @@ public class Niño extends Thread {
                 //Radio WSQK
                 radioWSQK.entrar(this);
                 log.escribir(id + " entra a Radio WSQK.");
-                Thread.sleep((2 + (int) (Math.random() * 3)) * 1000); //2-4s
+                Thread.sleep(2 + (int) (Math.random() * 3000)); //2-4s
                 radioWSQK.salir(this);
                 
                 //Bulteritoss vuelven a Calle Principal
                 callePrincipal.entrar(this);
                 log.escribir(id + " entra a la CALLE PRINCIPAL.");
-                Thread.sleep((3 + (int) (Math.random() * 3)) * 1000); //3-5s
+                Thread.sleep(3 + (int) (Math.random() * 3000)); //3-5s
                 callePrincipal.salir(this);
 
             }
