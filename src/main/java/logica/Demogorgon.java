@@ -1,4 +1,5 @@
 package logica;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -10,15 +11,17 @@ public class Demogorgon extends Thread {
     private Zona zonaActual;
     private final Random random;
     private final HawkinsLog log; 
-    
+    private final GestorEventos gestor; // Atributo añadido
 
-    public Demogorgon(String id, ArrayList<Zona> zonasUpsideDown, Zona colmena,HawkinsLog log) {
+    // Constructor actualizado
+    public Demogorgon(String id, ArrayList<Zona> zonasUpsideDown, Zona colmena, HawkinsLog log, GestorEventos gestor) {
         this.id = id;
         this.zonasUpsideDown = zonasUpsideDown;
         this.colmena = colmena;
         this.capturas = 0;
         this.random = new Random();
         this.log = log;
+        this.gestor = gestor; 
     }
 
     public String getIdentificador() { return id; }
@@ -28,20 +31,14 @@ public class Demogorgon extends Thread {
     @Override
     public void run() {
         try {
-            // 3. Bucle de vida infinito del hilo
             while (!Thread.currentThread().isInterrupted()) {
                 
-                //PARÁLISIS (Esto lo usamos cuando hagamos los eventos)
-                // Si Eleven interviene, el demogorgon se pausa por completo.
-                /* if (gestorEventos.isIntervencionEleven()) {
-                    Thread.sleep(1000); // Espera activa o usar wait()
+                // EVENTO: INTERVENCIÓN DE ELEVEN (Parálisis total)
+                if (gestor.isElevenActiva()) {
+                    Thread.sleep(1000); 
                     continue; 
-                } */
+                }
 
-                // MOVIMIENTO
-                // Si hay "Apagón", no pueden cambiar de zona.
-                // Si hay "Red Mental", van a la zona con más niños.
-                // Por defecto: movimiento aleatorio.
                 Zona siguienteZona = elegirSiguienteZona();
                 
                 if (zonaActual != null) {
@@ -50,78 +47,75 @@ public class Demogorgon extends Thread {
                 
                 zonaActual = siguienteZona;
                 zonaActual.entrarDemogorgon(this);
-                
-                // System.out.println(id + " ha llegado a " + zonaActual.getNombre()); // Sustituir por Log
 
-                // Busqueda de niños y ataque
                 int numNinosEnZona = zonaActual.getNumeroNiños();
                 
                 if (numNinosEnZona > 0) {
-                    // Hay niños: Intentar capturar a uno aleatorio
                     Niño objetivo = zonaActual.obtenerNiñoAleatorio();
-                    
                     if (objetivo != null) {
                         realizarAtaque(objetivo);
                     }
                 } else {
-                    // No hay niños: Patrullar
-                    // Tiempo aleatorio entre 4 y 5 segundos
                     long tiempoPatrulla = 4000 + random.nextInt(1001);
                     
-                    // Si hay Tormenta, el tiempo entre ataques se reduce a la mitad
-                    /* if (gestorEventos.isTormentaUpsideDown()) {
+                    // EVENTO: TORMENTA (Tiempo entre ataques/patrulla se reduce a la mitad)[cite: 2]
+                    if (gestor.isTormentaActiva()) {
                         tiempoPatrulla /= 2;
-                    } */
+                    }
                     
                     Thread.sleep(tiempoPatrulla);
                 }
             }
         } catch (InterruptedException e) {
-            System.out.println("El demogorgon " + id + " ha sido interrumpido.");
+            log.escribir("El demogorgon " + id + " ha sido interrumpido.");
         }
     }
 
-    // --- MÉTODOS AUXILIARES ---
-
     private Zona elegirSiguienteZona() {
-        // Lógica para el evento de la RED MENTAL
-        /* if (gestorEventos.isRedMental()) {
+        // EVENTO: RED MENTAL (Van a la zona con más niños)[cite: 2]
+        if (gestor.isRedMentalActiva()) {
             return obtenerZonaConMasNiños();
-        } */
+        } 
         
-        // Lógica para el evento de APAGÓN DEL LABORATORIO
-        /* if (gestorEventos.isApagon() && zonaActual != null) {
-            return zonaActual; // Se queda en la misma zona
-        } */
+        // EVENTO: APAGÓN (No pueden cambiar de zona)[cite: 2]
+        if (gestor.isApagonActivo() && zonaActual != null) {
+            return zonaActual;
+        }
 
-        // Movimiento aleatorio por defecto
+        // Movimiento aleatorio normal[cite: 2]
         return zonasUpsideDown.get(random.nextInt(zonasUpsideDown.size()));
     }
 
+    // Método auxiliar para el evento Red Mental
+    private Zona obtenerZonaConMasNiños() {
+        Zona zonaMasLlena = zonasUpsideDown.get(0);
+        int maxNinos = zonaMasLlena.getNumeroNiños();
+
+        for (Zona z : zonasUpsideDown) {
+            if (z.getNumeroNiños() > maxNinos) {
+                maxNinos = z.getNumeroNiños();
+                zonaMasLlena = z;
+            }
+        }
+        return zonaMasLlena;
+    }
+
     private void realizarAtaque(Niño objetivo) throws InterruptedException {
-        // Duración del ataque: entre 0,5 y 1,5 segundos
         long tiempoAtaque = 500 + random.nextInt(1001);
         Thread.sleep(tiempoAtaque);
 
-        // Probabilidad de que el niño resista (2/3 de resistir, por tanto 1/3 de ser capturado)
-        // random.nextInt(3) genera 0, 1 o 2. Si es 0 (1/3 de probabilidad), el ataque tiene éxito.
-        boolean capturaExitosa = (random.nextInt(3) == 0);
+        boolean capturaExitosa = (random.nextInt(3) == 0); // 1/3 de probabilidad de éxito
 
         if (capturaExitosa) {
-            // El ataque tiene éxito
-            zonaActual.salir(objetivo); // Lo sacamos de la zona actual
-            colmena.entrar(objetivo);   // Lo metemos en la colmena
-            objetivo.serCapturado();    // Avisamos al hilo del niño que ha sido capturado
+            zonaActual.salir(objetivo); 
+            colmena.entrar(objetivo);   
+            objetivo.serCapturado();    
             
-            // Tiempo en depositar al niño: entre 0,5 y 1 segundos
             long tiempoDeposito = 500 + random.nextInt(501);
             Thread.sleep(tiempoDeposito);
             
             capturas++;
-            // System.out.println(id + " ha capturado a " + objetivo.getIdentificador() + " (capturas: " + capturas + ")"); // Log
-        } else {
-            // El ataque fracasa, el niño permanece en el área
-            // System.out.println(id + " falló al atacar a " + objetivo.getIdentificador()); // Log
-        }
+            log.escribir(id + " ha capturado a " + objetivo.getIdNino() + " (capturas: " + capturas + ")"); 
+        } 
     }
 }
