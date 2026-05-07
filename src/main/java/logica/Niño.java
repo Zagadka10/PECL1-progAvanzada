@@ -35,8 +35,8 @@ public class Niño extends Thread {
     public synchronized void serCapturado() {
         this.capturado = true;
         try {
-            while (capturado) {
-                wait(); 
+            while (this.capturado) {// Si Eleven lo pone a false antes de llegar aquí, no entra al wait
+                this.wait(); 
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
@@ -45,7 +45,7 @@ public class Niño extends Thread {
 
     public synchronized void serLiberado() {
         this.capturado = false;
-        notifyAll(); 
+        this.notifyAll(); //envolver el rescate en el mismo objeto de sincronizacion
     }
 
     @Override
@@ -66,7 +66,7 @@ public class Niño extends Thread {
                 Thread.sleep((1 + (int) (Math.random() * 2)) * 1000); 
                 sotanoByers.salir(this);
 
-                // EVENTO: APAGÓN (Los niños no pueden usar los portales)[cite: 2]
+                // EVENTO: APAGÓN (Los niños no pueden usar los portales)
                 if (gestor.isApagonActivo()) {
                     log.escribir(id + " pospone su viaje debido al Apagón.");
                     Thread.sleep(1000); 
@@ -79,10 +79,10 @@ public class Niño extends Thread {
                 zonaElegida.entrar(this);
                 log.escribir(id + " explorando " + zonaElegida.getId() + ".");
                 
-                // Tiempo en el Upside Down: 3 a 5 segundos[cite: 2]
+                // Tiempo en el Upside Down: 3 a 5 segundos
                 long estancia = (3 + (long)(Math.random() * 3)) * 1000; 
                 
-                // EVENTO: TORMENTA (Tiempo de recolección duplicado)[cite: 2]
+                // EVENTO: TORMENTA (Tiempo de recolección duplicado)]
                 if (gestor.isTormentaActiva()) {
                     estancia *= 2; 
                 }
@@ -104,7 +104,6 @@ public class Niño extends Thread {
                 Thread.sleep(3 + (int) (Math.random() * 3000)); //3-5s
                 callePrincipal.salir(this);
 
-                
                 Thread.sleep(estancia);
                 
                 // Si ha sido capturado, el wait() de serCapturado() bloqueó el hilo.

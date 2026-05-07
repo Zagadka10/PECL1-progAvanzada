@@ -6,7 +6,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Main {
 
     public static void main(String[] args) {
-        
+
         // Inicializamos el sistema de logs 
         HawkinsLog log = new HawkinsLog();
         log.escribir("INICIA LA BATALLA DE HAWKINS");
@@ -30,23 +30,29 @@ public class Main {
         zonasUpsideDown.add(centroComercial);
         zonasUpsideDown.add(alcantarillado);
 
-        // 3. PORTALES
-        // Asignamos las capacidades exactas que pide el enunciado para cada grupo
-        Portal portalBosque = new Portal("Portal Bosque", bosque, 2, log);
-        Portal portalLab = new Portal("Portal Laboratorio", laboratorio, 3, log);
-        Portal portalCentro = new Portal("Portal C. Comercial", centroComercial, 4, log);
-        Portal portalAlcantarilla = new Portal("Portal Alcantarillado", alcantarillado, 2, log);
-
-        Portal[] portales = {portalBosque, portalLab, portalCentro, portalAlcantarilla};
-        
+        Portal[] portales = new Portal[4];
         // --- GESTOR DE EVENTOS Y SANGRE ---
         AtomicInteger sangreVecna = new AtomicInteger(0);
-        GestorEventos gestor = new GestorEventos(log, colmena, callePrincipal, sangreVecna);
+        GestorEventos gestor = new GestorEventos(log, colmena, callePrincipal, sangreVecna, portales);
+
+        // 3. PORTALES (Cambio de formato porque gestor argumento de portal)
+        // Asignamos las capacidades exactas que pide el enunciado para cada grupo
+        Portal portalBosque = new Portal("Portal Bosque", bosque, 2, log, gestor);
+        Portal portalLab = new Portal("Portal Laboratorio", laboratorio, 3, log, gestor);
+        Portal portalCentro = new Portal("Portal C. Comercial", centroComercial, 4, log, gestor);
+        Portal portalAlcantarilla = new Portal("Portal Alcantarillado", alcantarillado, 2, log, gestor);
+
+        portales[0] = portalBosque;
+        portales[1] = portalLab;
+        portales[2] = portalCentro;
+        portales[3] = portalAlcantarilla;
+        
         gestor.start();
 
         // 4. DEMOGORGON ALPHA
-        // ¡CORREGIDO! Creamos el primer demogorgon pasándole el 'gestor'
-        Demogorgon alpha = new Demogorgon("D0000", zonasUpsideDown, colmena, log, gestor);
+        //Creamos el primer demogorgon pasándole el 'gestor'
+        AtomicInteger capturasTotales = new AtomicInteger(0);
+        Demogorgon alpha = new Demogorgon("D0000", zonasUpsideDown, colmena, log, gestor, capturasTotales);
         alpha.start();
         log.escribir("Vecna ha soltado al Demogorgon Alpha");
 
@@ -59,13 +65,13 @@ public class Main {
 
             try {
                 // Intervalo aleatorio de entre 0,5 y 2 segundos (500 a 2000 milisegundos)
-                long tiempoEspera = 500 + (long)(Math.random() * 1501);
+                long tiempoEspera = 500 + (long) (Math.random() * 1501);
                 Thread.sleep(tiempoEspera);
             } catch (InterruptedException e) {
                 System.out.println("Interrupción en la creación de niños: " + e.getMessage());
             }
         }
-        
+
         log.escribir("Todos los niños se han generado.");
     }
 }

@@ -14,12 +14,14 @@ public class GestorEventos extends Thread {
     private final Zona colmena;
     private final Zona callePrincipal;
     private final AtomicInteger sangreVecna;
+    private final Portal[] portales;
 
-    public GestorEventos(HawkinsLog log, Zona colmena, Zona callePrincipal, AtomicInteger sangreVecna) {
+    public GestorEventos(HawkinsLog log, Zona colmena, Zona callePrincipal, AtomicInteger sangreVecna, Portal[] portales ) {
         this.log = log;
         this.colmena = colmena;
         this.callePrincipal = callePrincipal;
         this.sangreVecna = sangreVecna;
+        this.portales = portales;
     }
 
     // Getters sincronizados para que los hilos consulten qué pasa
@@ -75,6 +77,14 @@ public class GestorEventos extends Thread {
     }
 
     private synchronized void desactivarEventos() {
+        if (apagonActivo) {
+        log.escribir("FIN EVENTO: El Apagón ha acabado, los portales se reactivan.");
+        apagonActivo = false;
+        // Avisamos a todos los portales de que pueden despertar a los niños
+        for (Portal p : portales) {
+            p.finApagon();
+        }
+    }
         if (apagonActivo) log.escribir("FIN EVENTO: El Apagón ha acabado");
         if (tormentaActiva) log.escribir("FIN EVENTO: La Tormenta ha acabado");
         if (elevenActiva) log.escribir("FIN EVENTO: Eleven deja de usar sus poderes");

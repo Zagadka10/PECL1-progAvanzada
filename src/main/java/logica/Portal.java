@@ -3,6 +3,7 @@ package logica;
 import java.util.concurrent.locks.*;
 
 public class Portal {
+
     private final String nombre;
     private final Zona zonaDestino;
     private final int tamanoGrupo;
@@ -12,43 +13,50 @@ public class Portal {
     private final Condition esperaFormarGrupo = cerrojo.newCondition();
     private final Condition esperaCruzarBajada = cerrojo.newCondition();
     private final Condition esperaSubida = cerrojo.newCondition();
-    
+    Condition esperaApagon = cerrojo.newCondition();
+
     // Contadores de estado
     private int niñosEsperandoBajar = 0;
     private int niñosCruzandoBajada = 0;
     private int niñosVuelta = 0;
     private boolean portalOcupado = false;
-    private boolean grupoCruzando = false; 
+    private boolean grupoCruzando = false;
 
     private HawkinsLog log;
+    private final GestorEventos gestor;
 
-    public Portal(String nombre, Zona zonaDestino, int numeroGrupo, HawkinsLog log) {
+    public Portal(String nombre, Zona zonaDestino, int numeroGrupo, HawkinsLog log, GestorEventos gestor) {
         this.nombre = nombre;
         this.zonaDestino = zonaDestino;
         this.tamanoGrupo = numeroGrupo;
         this.log = log;
+        this.gestor = gestor;
     }
 
     public void bajarUpsideDown(Niño niño) throws InterruptedException {
         cerrojo.lock();
         try {
             niñosEsperandoBajar++;
-            
-            // 1. Esperar a que haya quorum Y que ningún otro grupo esté cruzando
+            // Si hay apagón, se quedan aquí esperando a que GestorEventos llame a signalAll()
+            while (gestor.isApagonActivo()) {
+                esperaApagon.await();
+            }
+
+            //Esperar a que haya quorum Y que ningún otro grupo esté cruzando
             while (niñosEsperandoBajar < tamanoGrupo || grupoCruzando) {
                 // Si justo yo completo el grupo y nadie cruza, despierto a los demás
                 if (niñosEsperandoBajar >= tamanoGrupo && !grupoCruzando) {
                     grupoCruzando = true;
                     niñosCruzandoBajada = tamanoGrupo; // Registramos cuántos van a cruzar
                     esperaFormarGrupo.signalAll(); // Despierta al resto del grupo
-                    break; 
+                    break;
                 }
                 esperaFormarGrupo.await();
             }
 
             niñosEsperandoBajar--; // Ya formo parte del grupo que cruza
 
-            // 2. Esperar mi turno individual para cruzar (y ceder prioridad a los que suben)
+            // Esperar mi turno individual para cruzar (y ceder prioridad a los que suben)
             while (portalOcupado || niñosVuelta > 0) {
                 esperaCruzarBajada.await();
             }
@@ -56,10 +64,10 @@ public class Portal {
         } finally {
             cerrojo.unlock();
         }
-        
-        // 3. Cruzar (Fuera del lock para que no se congele todo el programa)
-        Thread.sleep(1000); 
-        
+
+        // Cruzar (Fuera del lock para que no se congele todo el programa)
+        Thread.sleep(1000);
+
         cerrojo.lock();
         try {
             portalOcupado = false;
@@ -82,36 +90,46 @@ public class Portal {
         }
     }
 
-    public void volverHawkins(Niño n) throws InterruptedException{
+    public void volverHawkins(Niño n) throws InterruptedException {
         cerrojo.lock();
-        try{
+        try {
             niñosVuelta++;
-            while(portalOcupado){
+            while (portalOcupado) {
                 esperaSubida.await();
             }
             portalOcupado = true;
-        }finally{
+        } finally {
             cerrojo.unlock();
         }
-        
+
         Thread.sleep(1000);
-        
+
         cerrojo.lock();
-        try{
+        try {
             portalOcupado = false;
             niñosVuelta--;
-            
+
             // Si hay más esperando subir, les doy paso. Si no, doy paso a los que bajan.
-            if(niñosVuelta > 0){
+            if (niñosVuelta > 0) {
                 esperaSubida.signal();
-            }else{
-                esperaCruzarBajada.signal(); 
+            } else {
+                esperaCruzarBajada.signal();
             }
-        }finally{
+        } finally {
             cerrojo.unlock();
         }
     }
-    
+
+    //método que llamará el Gestor cuando vuelva la luz
+    public void finApagon() {
+        cerrojo.lock();
+        try {
+            esperaApagon.signalAll(); // Despierta a TODOS los niños bloqueados por el apagón
+        } finally {
+            cerrojo.unlock();
+        }
+    }
+
     public Zona getZonaDestino() {
         return zonaDestino;
     }
