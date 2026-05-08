@@ -77,14 +77,6 @@ public class Demogorgon extends Thread {
 
                     Thread.sleep(tiempoPatrulla);
                 }
-
-                int capturasGlobales = capturas.incrementAndGet();
-                if (capturasGlobales % 8 == 0) {
-                    // Generar nuevo demogorgon
-                    Demogorgon nuevoD = new Demogorgon("D" + String.format("%04d", capturasGlobales / 8), zonasUpsideDown, colmena, log, gestor, capturas);
-                    nuevoD.start();
-                    log.escribir("¡Vecna ha creado un nuevo Demogorgon! (" + nuevoD.getIdentificador() + ")");
-                }
             }
         } catch (InterruptedException e) {
             log.escribir("El demogorgon " + id + " ha sido interrumpido.");
