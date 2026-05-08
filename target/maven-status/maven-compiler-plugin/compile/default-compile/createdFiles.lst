@@ -1,6 +1,8 @@
 logica\GestorEventos.class
 logica\Niño.class
+comun\InterfaceHawkins.class
 logica\Zona.class
+logica\Servidor.class
 logica\Main.class
 logica\Portal.class
 logica\Demogorgon.class

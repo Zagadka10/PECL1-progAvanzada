@@ -1,5 +1,7 @@
 package logica;
 
+import java.rmi.Naming;
+import java.rmi.registry.LocateRegistry;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -11,12 +13,12 @@ public class Main {
         HawkinsLog log = new HawkinsLog();
         log.escribir("INICIA LA BATALLA DE HAWKINS");
 
-        // 1. ZONAS SEGURAS (Hawkins)
+        // ZONAS SEGURAS (Hawkins)
         Zona callePrincipal = new Zona("Calle Principal");
         Zona sotanoByers = new Zona("Sótano Byers");
         Zona radioWSQK = new Zona("Radio WSQK");
 
-        // 2. ZONAS INSEGURAS (Upside Down)
+        // ZONAS INSEGURAS (Upside Down)
         Zona bosque = new Zona("Bosque");
         Zona laboratorio = new Zona("Laboratorio");
         Zona centroComercial = new Zona("Centro Comercial");
@@ -31,11 +33,12 @@ public class Main {
         zonasUpsideDown.add(alcantarillado);
 
         Portal[] portales = new Portal[4];
+
         // --- GESTOR DE EVENTOS Y SANGRE ---
         AtomicInteger sangreVecna = new AtomicInteger(0);
         GestorEventos gestor = new GestorEventos(log, colmena, callePrincipal, sangreVecna, portales);
 
-        // 3. PORTALES (Cambio de formato porque gestor argumento de portal)
+        // PORTALES (Cambio de formato porque gestor argumento de portal)
         // Asignamos las capacidades exactas que pide el enunciado para cada grupo
         Portal portalBosque = new Portal("Portal Bosque", bosque, 2, log, gestor);
         Portal portalLab = new Portal("Portal Laboratorio", laboratorio, 3, log, gestor);
@@ -46,17 +49,45 @@ public class Main {
         portales[1] = portalLab;
         portales[2] = portalCentro;
         portales[3] = portalAlcantarilla;
-        
+
+        AtomicInteger capturasTotales = new AtomicInteger(0);
+
+        ArrayList<Zona> todasLasZonas = new ArrayList<>();
+        todasLasZonas.add(callePrincipal);
+        todasLasZonas.add(sotanoByers);
+        todasLasZonas.add(radioWSQK);
+        todasLasZonas.add(bosque);
+        todasLasZonas.add(laboratorio);
+        todasLasZonas.add(centroComercial);
+        todasLasZonas.add(alcantarillado);
+        todasLasZonas.add(colmena);
+
+        //Para RMI
+        try {
+            // Creamos la instancia del objeto remoto (el "recepcionista")
+            Servidor srv = new Servidor(todasLasZonas, portales, gestor, sangreVecna, capturasTotales);
+
+            // Arrancamos el registro RMI en el puerto 1099
+            LocateRegistry.createRegistry(1099);
+
+            // Registramos el objeto con un nombre para que el cliente lo encuentre
+            Naming.rebind("//localhost/ObjetoHawkins", srv);
+
+            log.escribir(">>> SERVIDOR RMI: Objeto distribuido registrado correctamente en puerto 1099");
+        } catch (Exception e) {
+            log.escribir("!!! ERROR RMI: No se pudo registrar el servidor: " + e.getMessage());
+            e.printStackTrace();
+        }
+
         gestor.start();
 
-        // 4. DEMOGORGON ALPHA
-        //Creamos el primer demogorgon pasándole el 'gestor'
-        AtomicInteger capturasTotales = new AtomicInteger(0);
+        // DEMOGORGON ALPHA
+        //Creamos el primer demogorgon pasándole el gestor
         Demogorgon alpha = new Demogorgon("D0000", zonasUpsideDown, colmena, log, gestor, capturasTotales);
         alpha.start();
         log.escribir("Vecna ha soltado al Demogorgon Alpha");
 
-        // 5. GENERACIÓN ESCALONADA DE NIÑOS
+        // GENERACIÓN ESCALONADA DE NIÑOS
         // El sistema debe generar 1.500 niños
         for (int i = 1; i <= 1500; i++) {
             // ¡CORREGIDO! Pasamos 'gestor' y 'sangreVecna' al final del constructor
