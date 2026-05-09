@@ -1,5 +1,7 @@
 package logica;
 
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.locks.*;
 
 public class Portal {
@@ -7,6 +9,8 @@ public class Portal {
     private final String nombre;
     private final Zona zonaDestino;
     private final int tamanoGrupo;
+    
+    private final CyclicBarrier quorum;
 
     private final ReentrantLock cerrojo = new ReentrantLock();
     // Colas de espera
@@ -25,38 +29,37 @@ public class Portal {
     private HawkinsLog log;
     private final GestorEventos gestor;
 
-    public Portal(String nombre, Zona zonaDestino, int numeroGrupo, HawkinsLog log, GestorEventos gestor) {
+    public Portal(String nombre, Zona zonaDestino, int tamanoGrupo, HawkinsLog log, GestorEventos gestor) {
         this.nombre = nombre;
         this.zonaDestino = zonaDestino;
-        this.tamanoGrupo = numeroGrupo;
+        this.tamanoGrupo = tamanoGrupo;
         this.log = log;
         this.gestor = gestor;
+        this.quorum = new CyclicBarrier(tamanoGrupo);
     }
 
     public void bajarUpsideDown(Niño niño) throws InterruptedException {
+        //comprobar apagon
         cerrojo.lock();
         try {
-            niñosEsperandoBajar++;
-            // Si hay apagón, se quedan aquí esperando a que GestorEventos llame a signalAll()
             while (gestor.isApagonActivo()) {
                 esperaApagon.await();
             }
+        } finally {
+            cerrojo.unlock();
+        }
 
-            //Esperar a que haya quorum Y que ningún otro grupo esté cruzando
-            while (niñosEsperandoBajar < tamanoGrupo || grupoCruzando) {
-                // Si justo yo completo el grupo y nadie cruza, despierto a los demás
-                if (niñosEsperandoBajar >= tamanoGrupo && !grupoCruzando) {
-                    grupoCruzando = true;
-                    niñosCruzandoBajada = tamanoGrupo; // Registramos cuántos van a cruzar
-                    esperaFormarGrupo.signalAll(); // Despierta al resto del grupo
-                    break;
-                }
-                esperaFormarGrupo.await();
-            }
+        // ESPERAR AL GRUPO (fuera del cerrojo general)
+        try {
+            quorum.await(); 
+        } catch (BrokenBarrierException e) {
+            System.out.println("La barrera del portal se rompió: " + e.getMessage());
+        }
 
-            niñosEsperandoBajar--; // Ya formo parte del grupo que cruza
-
-            // Esperar mi turno individual para cruzar (y ceder prioridad a los que suben)
+        // PASO FÍSICO POR EL PORTAL 
+        cerrojo.lock();
+        try {
+            niñosCruzandoBajada++;
             while (portalOcupado || niñosVuelta > 0) {
                 esperaCruzarBajada.await();
             }
@@ -65,7 +68,7 @@ public class Portal {
             cerrojo.unlock();
         }
 
-        // Cruzar (Fuera del lock para que no se congele todo el programa)
+        // Cruzar (Simula el tiempo de viaje físico)
         Thread.sleep(1000);
 
         cerrojo.lock();
@@ -73,17 +76,11 @@ public class Portal {
             portalOcupado = false;
             niñosCruzandoBajada--;
 
-            // Si fui el último del grupo en cruzar, el portal queda libre para otro grupo
-            if (niñosCruzandoBajada == 0) {
-                grupoCruzando = false;
-                esperaFormarGrupo.signalAll(); // Aviso a los que intentan formar nuevo grupo
-            }
-
-            // Gestión de prioridades al liberar el portal
+            // Si hay niños esperando para subir a Hawkins, les damos prioridad
             if (niñosVuelta > 0) {
-                esperaSubida.signal(); // Prioridad a los que vuelven
+                esperaSubida.signal();
             } else {
-                esperaCruzarBajada.signal(); // Paso al siguiente del grupo que baja
+                esperaCruzarBajada.signal(); // Si no, que pase el siguiente de mi grupo que baja
             }
         } finally {
             cerrojo.unlock();

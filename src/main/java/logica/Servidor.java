@@ -13,6 +13,9 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 import comun.InterfazHawkins;
+import static java.util.Collections.sort;
+import java.util.Comparator;
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -84,7 +87,7 @@ public class Servidor extends UnicastRemoteObject implements InterfazHawkins {
 
     @Override
     public String getNombreTopDemogorgon(int posicion) throws RemoteException {
-        CopyOnWriteArrayList<Demogorgon> ordenados = obtenerRanking();
+        ArrayList<Demogorgon> ordenados = obtenerRanking();
         if (posicion <= ordenados.size()) {
             return ordenados.get(posicion - 1).getIdentificador();
         }
@@ -93,18 +96,35 @@ public class Servidor extends UnicastRemoteObject implements InterfazHawkins {
 
     @Override
     public int getCapturasTopDemogorgon(int posicion) throws RemoteException {
-        CopyOnWriteArrayList<Demogorgon> ordenados = obtenerRanking();
+        ArrayList<Demogorgon> ordenados = obtenerRanking();
         if (posicion <= ordenados.size()) {
             return ordenados.get(posicion - 1).getCapturasIndividuales();
         }
         return 0;
     }
 
-    private CopyOnWriteArrayList<Demogorgon> obtenerRanking() {
-        return todosLosDemogorgons.stream()
-                .sorted((d1, d2) -> Integer.compare(d2.getCapturasIndividuales(), d1.getCapturasIndividuales()))
-                .limit(3)
-                .collect(Collectors.toList());
+    private ArrayList<Demogorgon> obtenerRanking() {
+        // 1. Hacemos una copia de la lista para no desordenar la lista original del servidor
+        ArrayList<Demogorgon> listaOrdenada = new ArrayList<>(listaDemogorgons);
+
+        // 2. Ordenamos la copia de mayor a menor (descendente)
+        sort(listaOrdenada, new Comparator<Demogorgon>() {
+            @Override
+            public int compare(Demogorgon d1, Demogorgon d2) {
+                // Comparamos d2 con d1 para que el mayor quede arriba
+                return Integer.compare(d2.getCapturasIndividuales(), d1.getCapturasIndividuales());
+            }
+        });
+
+        // 3. Extraemos solo los 3 primeros (o menos, si todavía no han nacido 3 demogorgons)
+        ArrayList<Demogorgon> top3 = new ArrayList<>();
+        int limite = Math.min(3, listaOrdenada.size()); // Para evitar errores si hay menos de 3
+        
+        for (int i = 0; i < limite; i++) {
+            top3.add(listaOrdenada.get(i));
+        }
+
+        return top3;
     }
 
     @Override
@@ -128,12 +148,12 @@ public class Servidor extends UnicastRemoteObject implements InterfazHawkins {
     }
 
     // Métodos GUI pueda necesitar
-    @Override
+    //@Override
     public int getSangreVecna() throws RemoteException {
         return sangreVecna.get();
     }
 
-    @Override
+    //@Override
     public int getCapturasTotales() throws RemoteException {
         return capturasTotales.get();
     }

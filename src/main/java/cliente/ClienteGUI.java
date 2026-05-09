@@ -4,19 +4,81 @@
  */
 package cliente;
 
+import comun.InterfazHawkins;
+import java.awt.event.ActionListener;
+import javax.swing.Timer;
+
 /**
  *
  * @author hecto
  */
 public class ClienteGUI extends javax.swing.JFrame {
     
+    private InterfazHawkins servidor;
+    private Timer timer;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ClienteGUI.class.getName());
 
     /**
      * Creates new form ClienteGUI
      */
-    public ClienteGUI() {
+    public ClienteGUI(InterfazHawkins servidor) {
+        this.servidor = servidor;
         initComponents();
+        iniciarHiloActualizador();
+    }
+    
+    private void iniciarHiloActualizador() {
+        // Ejecuta la actualización cada 500 milisegundos (Medio segundo)
+        timer = new javax.swing.Timer(500, new ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                actualizarDatos();
+            }
+        });
+        timer.start();
+    }
+
+    private void actualizarDatos() {
+        try {
+            // RESUMEN HAWKINS 
+            totalNiños.setText(String.valueOf(servidor.getTotalNinosHawkins()));
+
+            // PORTALES 
+            portal1.setText(String.valueOf(servidor.getNinosEnPortal(1)));
+            portal2.setText(String.valueOf(servidor.getNinosEnPortal(2)));
+            portal3.setText(String.valueOf(servidor.getNinosEnPortal(3)));
+            portal4.setText(String.valueOf(servidor.getNinosEnPortal(4)));
+
+            // UPSIDE DOWN (NIÑOS)
+            niñosBosque.setText(String.valueOf(servidor.getNumeroNinosEnZona("Bosque")));
+            niñosLab.setText(String.valueOf(servidor.getNumeroNinosEnZona("Laboratorio")));
+            niñosCC.setText(String.valueOf(servidor.getNumeroNinosEnZona("Centro Comercial")));
+            niñosAlcantarillado.setText(String.valueOf(servidor.getNumeroNinosEnZona("Alcantarillado")));
+            niñosColmena.setText(String.valueOf(servidor.getNumeroNinosEnZona("Colmena")));
+
+            // UPSIDE DOWN (DEMOGORGONS) 
+            demogorgonsBosque.setText(String.valueOf(servidor.getNumeroDemogorgonsEnZona("Bosque")));
+            demogorgonsLab.setText(String.valueOf(servidor.getNumeroDemogorgonsEnZona("Laboratorio")));
+            demogorgonsCC.setText(String.valueOf(servidor.getNumeroDemogorgonsEnZona("Centro Comercial")));
+            demogorgonsAlcantarillado.setText(String.valueOf(servidor.getNumeroDemogorgonsEnZona("Alcantarillado")));
+
+            // RANKING TOP 3 DEMOGORGONS 
+            demogorgon1.setText(servidor.getNombreTopDemogorgon(1));
+            capturas1.setText(String.valueOf(servidor.getCapturasTopDemogorgon(1)));
+            
+            demogorgon2.setText(servidor.getNombreTopDemogorgon(2));
+            capturas2.setText(String.valueOf(servidor.getCapturasTopDemogorgon(2)));
+            
+            demogorgon3.setText(servidor.getNombreTopDemogorgon(3));
+            capturas3.setText(String.valueOf(servidor.getCapturasTopDemogorgon(3)));
+
+            // EVENTOS 
+            tipoEvento.setText(servidor.getTipoEventoActivo());
+            tiempoRestanteEvento.setText(servidor.getTiempoRestanteEvento() + " s");
+
+        } catch (Exception e) {
+            System.out.println("Error de red consultando al servidor: " + e.getMessage());
+        }
     }
 
     /**
@@ -81,6 +143,7 @@ public class ClienteGUI extends javax.swing.JFrame {
         tipoEvento = new javax.swing.JLabel();
         tiempoRestanteEvento = new javax.swing.JLabel();
         botonDetener = new javax.swing.JToggleButton();
+        jLabel26 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -357,7 +420,7 @@ public class ClienteGUI extends javax.swing.JFrame {
                         .addComponent(jLabel23, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(demogorgon3, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(capturas1, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(capturas2, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -401,15 +464,15 @@ public class ClienteGUI extends javax.swing.JFrame {
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(tipoEvento, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(tiempoRestanteEvento, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(tiempoRestanteEvento, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel5Layout.createSequentialGroup()
+                            .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)
+                            .addComponent(tipoEvento, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addComponent(jLabel25)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(35, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -432,29 +495,38 @@ public class ClienteGUI extends javax.swing.JFrame {
             }
         });
 
+        jLabel26.setText("MÓDULO REMOTO");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(15, 15, 15)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(botonDetener, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel26)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(botonDetener, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(18, 46, Short.MAX_VALUE)
+                .addContainerGap(18, Short.MAX_VALUE)
+                .addComponent(jLabel26)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -484,16 +556,16 @@ public class ClienteGUI extends javax.swing.JFrame {
                 // Cambiamos el texto al modo contrario
                 botonDetener.setText("Reanudar Simulación");
                 
-                // TODO Aquí iría la llamada al servidor RMI 
-                // servidor.pausar(); 
-                
+                // la llamada al servidor RMI 
+                servidor.pausarSimulacion(); 
                 System.out.println("Has pausado la simulación.");
+                
             } else {
-                // 1. Volvemos al texto original
+                // Volvemos al texto original
                 botonDetener.setText("Pausar Simulación");
                 
-                // 2. Aquí iría la llamada RMI para reanudar
-                // servidor.reanudar();
+                // llamada RMI para reanudar
+                servidor.reanudarSimulacion();
                 
                 System.out.println("Has reanudado la simulación.");
             }
@@ -524,7 +596,7 @@ public class ClienteGUI extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new ClienteGUI().setVisible(true));
+        //java.awt.EventQueue.invokeLater(() -> new ClienteGUI().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -557,6 +629,7 @@ public class ClienteGUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
+    private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;

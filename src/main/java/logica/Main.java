@@ -3,7 +3,6 @@ package logica;
 import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -86,7 +85,7 @@ public class Main {
         gestor.start();
 
         // DEMOGORGON ALPHA
-        Demogorgon alpha = new Demogorgon("D0000", zonasUpsideDown, colmena, log, gestor, capturasTotales);
+        Demogorgon alpha = new Demogorgon("D0000", zonasUpsideDown, colmena, log, gestor, capturasTotales, listaDemogorgons);
         alpha.start();
         log.escribir("Vecna ha soltado al Demogorgon Alpha");
         //Lista para  estadisticas de clase cliente.

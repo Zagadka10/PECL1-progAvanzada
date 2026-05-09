@@ -2,6 +2,7 @@ package logica;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Demogorgon extends Thread {
@@ -15,9 +16,11 @@ public class Demogorgon extends Thread {
     private final HawkinsLog log;
     private final GestorEventos gestor; // Atributo añadido
     private int capturasIndividuales;
+    private final CopyOnWriteArrayList<Demogorgon> listaDemogorgons; // Añade este atributo
 
     // Constructor actualizado
-    public Demogorgon(String id, ArrayList<Zona> zonasUpsideDown, Zona colmena, HawkinsLog log, GestorEventos gestor, AtomicInteger capturas) {
+    public Demogorgon(String id, ArrayList<Zona> zonasUpsideDown, Zona colmena, 
+            HawkinsLog log, GestorEventos gestor, AtomicInteger capturas, CopyOnWriteArrayList<Demogorgon> listaDemogorgons) {
         this.id = id;
         this.zonasUpsideDown = zonasUpsideDown;
         this.colmena = colmena;
@@ -26,6 +29,7 @@ public class Demogorgon extends Thread {
         this.gestor = gestor;
         this.capturas = capturas;
         this.capturasIndividuales = 0;
+        this.listaDemogorgons = listaDemogorgons;
     }
 
     public String getIdentificador() {
@@ -48,7 +52,9 @@ public class Demogorgon extends Thread {
     public void run() {
         try {
             while (!Thread.currentThread().isInterrupted()) {
-
+                
+                //Pausa ddesde el modulo remoto
+                gestor.comprobarPausa();
                 // EVENTO: INTERVENCIÓN DE ELEVEN (Parálisis total)
                 if (gestor.isElevenActiva()) {
                     Thread.sleep(1000);
@@ -143,7 +149,8 @@ public class Demogorgon extends Thread {
                 String nuevoId = String.format("D%04d", nuevoIdNum);
 
                 // El Demogorgon instancia al nuevo clon pasándole los mismos recursos compartidos
-                Demogorgon nuevoDemo = new Demogorgon(nuevoId, zonasUpsideDown, colmena, log, gestor, capturas);
+                Demogorgon nuevoDemo = new Demogorgon(nuevoId, zonasUpsideDown, colmena, log, gestor, capturas, listaDemogorgons);
+                listaDemogorgons.add(nuevoDemo);
                 nuevoDemo.start();
                 log.escribir(id + " ha capturado a " + objetivo.getIdNino() + " (capturas: " + capturas + ")");
             }

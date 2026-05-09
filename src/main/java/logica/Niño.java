@@ -56,6 +56,8 @@ public class Niño extends Thread {
             callePrincipal.salir(this);
 
             while (!Thread.currentThread().isInterrupted()) {
+                //Pausa desde el modulo remoto
+                gestor.comprobarPausa();
                 
                 sotanoByers.entrar(this);
                 log.escribir(id + " entra a Sotano Byers.");
@@ -86,23 +88,6 @@ public class Niño extends Thread {
                 if (gestor.isTormentaActiva()) {
                     estancia *= 2; 
                 }
-                
-                //vuelta a hawkins
-                zonaElegida.salir(this);
-                log.escribir(id + " regresa a Hawkins con sangre.");
-                portalElegido.volverHawkins(this);
-
-                //Radio WSQK
-                radioWSQK.entrar(this);
-                log.escribir(id + " entra a Radio WSQK.");
-                Thread.sleep(2 + (int) (Math.random() * 3000)); //2-4s
-                radioWSQK.salir(this);
-                
-                //Bulteritoss vuelven a Calle Principal
-                callePrincipal.entrar(this);
-                log.escribir(id + " entra a la CALLE PRINCIPAL.");
-                Thread.sleep(3 + (int) (Math.random() * 3000)); //3-5s
-                callePrincipal.salir(this);
 
                 Thread.sleep(estancia);
                 

@@ -56,14 +56,27 @@ public class GestorEventos extends Thread {
         return tiempoRestante;
     }
 
-    public synchronized void setPausado(boolean pausado) {
-        this.pausado = pausado;
+    // Modificamos el setter para que despierte a los hilos al reanudar
+    public synchronized void setPausado(boolean estado) {
+        this.pausado = estado;
+        if (!pausado) {
+            this.notifyAll(); 
+        }
+    }
+
+    // 
+    public synchronized void comprobarPausa() throws InterruptedException {
+        while (pausado) {
+            this.wait(); // Si hay pausa, el hilo que llame a esto se queda congelado
+        }
     }
 
     @Override
     public void run() {
         try {
             while (!Thread.currentThread().isInterrupted()) {
+                //Pararmos eventos tambien
+                comprobarPausa();
                 // 1. Tiempo entre eventos: 30 a 60 segundos
                 long tiempoEspera = 30000 + (long) (Math.random() * 30000);
                 Thread.sleep(tiempoEspera);
