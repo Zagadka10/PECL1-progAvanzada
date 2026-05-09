@@ -129,6 +129,16 @@ public class Portal {
             cerrojo.unlock();
         }
     }
+    
+    public int getNumeroNinosActuales() {
+        cerrojo.lock();
+        try {
+            // Sumamos todos los niños que están interactuando con el portal
+            return niñosEsperandoBajar + niñosCruzandoBajada + niñosVuelta;
+        } finally {
+            cerrojo.unlock();
+        }
+    }
 
     public Zona getZonaDestino() {
         return zonaDestino;

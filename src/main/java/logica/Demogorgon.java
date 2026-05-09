@@ -39,6 +39,10 @@ public class Demogorgon extends Thread {
     public Zona getZonaActual() {
         return zonaActual;
     }
+    
+    public int getCapturasIndividuales() {
+        return capturasIndividuales;
+    }
 
     @Override
     public void run() {

@@ -3,6 +3,8 @@ package logica;
 import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Main {
@@ -61,11 +63,13 @@ public class Main {
         todasLasZonas.add(centroComercial);
         todasLasZonas.add(alcantarillado);
         todasLasZonas.add(colmena);
+        
+        CopyOnWriteArrayList<Demogorgon> listaDemogorgons = new CopyOnWriteArrayList<>();
 
         //Para RMI
         try {
             // Creamos la instancia del objeto remoto (el "recepcionista")
-            Servidor srv = new Servidor(todasLasZonas, portales, gestor, sangreVecna, capturasTotales);
+            Servidor srv = new Servidor(todasLasZonas, portales, gestor, sangreVecna, capturasTotales, listaDemogorgons);
 
             // Arrancamos el registro RMI en el puerto 1099
             LocateRegistry.createRegistry(1099);
@@ -82,15 +86,16 @@ public class Main {
         gestor.start();
 
         // DEMOGORGON ALPHA
-        //Creamos el primer demogorgon pasándole el gestor
         Demogorgon alpha = new Demogorgon("D0000", zonasUpsideDown, colmena, log, gestor, capturasTotales);
         alpha.start();
         log.escribir("Vecna ha soltado al Demogorgon Alpha");
+        //Lista para  estadisticas de clase cliente.
+        listaDemogorgons.add(alpha);
 
         // GENERACIÓN ESCALONADA DE NIÑOS
         // El sistema debe generar 1.500 niños
         for (int i = 1; i <= 1500; i++) {
-            // ¡CORREGIDO! Pasamos 'gestor' y 'sangreVecna' al final del constructor
+            
             Niño n = new Niño(String.valueOf(i), sotanoByers, callePrincipal, radioWSQK, colmena, portales, log, gestor, sangreVecna);
             n.start();
 

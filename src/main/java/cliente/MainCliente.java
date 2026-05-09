@@ -5,7 +5,7 @@
 package cliente;
 
 import java.rmi.Naming;
-import comun.InterfaceHawkins;
+import comun.InterfazHawkins;
 
 /**
  *
@@ -21,7 +21,7 @@ public class MainCliente {
 
         try {
             // Localizamos el objeto en la red
-            InterfaceHawkins servidor = (InterfaceHawkins) Naming.lookup("//localhost/ObjetoHawkins");
+            InterfazHawkins servidor = (InterfazHawkins) Naming.lookup("//localhost/ObjetoHawkins");
             System.out.println("¡Conexión establecida! Abriendo interfaz gráfica...");
 
             // Abrimos la ventana pasándole el acceso al servidor

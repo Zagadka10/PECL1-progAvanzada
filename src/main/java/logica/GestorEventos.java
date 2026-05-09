@@ -4,11 +4,17 @@ import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class GestorEventos extends Thread {
+
     // Flags de los eventos
     private boolean apagonActivo = false;
     private boolean tormentaActiva = false;
     private boolean elevenActiva = false;
     private boolean redMentalActiva = false;
+
+    //Variables para el servidor
+    private String nombreEventoActual = "Sin evento activo";
+    private int tiempoRestante = 0;
+    private boolean pausado = false;
 
     private final HawkinsLog log;
     private final Zona colmena;
@@ -16,7 +22,7 @@ public class GestorEventos extends Thread {
     private final AtomicInteger sangreVecna;
     private final Portal[] portales;
 
-    public GestorEventos(HawkinsLog log, Zona colmena, Zona callePrincipal, AtomicInteger sangreVecna, Portal[] portales ) {
+    public GestorEventos(HawkinsLog log, Zona colmena, Zona callePrincipal, AtomicInteger sangreVecna, Portal[] portales) {
         this.log = log;
         this.colmena = colmena;
         this.callePrincipal = callePrincipal;
@@ -25,17 +31,41 @@ public class GestorEventos extends Thread {
     }
 
     // Getters sincronizados para que los hilos consulten qué pasa
-    public synchronized boolean isApagonActivo() { return apagonActivo; }
-    public synchronized boolean isTormentaActiva() { return tormentaActiva; }
-    public synchronized boolean isElevenActiva() { return elevenActiva; }
-    public synchronized boolean isRedMentalActiva() { return redMentalActiva; }
+    public synchronized boolean isApagonActivo() {
+        return apagonActivo;
+    }
+
+    public synchronized boolean isTormentaActiva() {
+        return tormentaActiva;
+    }
+
+    public synchronized boolean isElevenActiva() {
+        return elevenActiva;
+    }
+
+    public synchronized boolean isRedMentalActiva() {
+        return redMentalActiva;
+    }
+
+    //Getter para RMI 
+    public synchronized String getNombreEventoActual() {
+        return nombreEventoActual;
+    }
+
+    public synchronized int getTiempoRestante() {
+        return tiempoRestante;
+    }
+
+    public synchronized void setPausado(boolean pausado) {
+        this.pausado = pausado;
+    }
 
     @Override
     public void run() {
         try {
             while (!Thread.currentThread().isInterrupted()) {
                 // 1. Tiempo entre eventos: 30 a 60 segundos
-                long tiempoEspera = 30000 + (long)(Math.random() * 30000);
+                long tiempoEspera = 30000 + (long) (Math.random() * 30000);
                 Thread.sleep(tiempoEspera);
 
                 // 2. Elegir un evento al azar (0 a 3)
@@ -43,9 +73,15 @@ public class GestorEventos extends Thread {
                 activarEvento(tipoEvento);
 
                 // 3. Duración del evento: 5 a 10 segundos[cite: 2]
-                long duracionEvento = 5000 + (long)(Math.random() * 5000);
-                Thread.sleep(duracionEvento);
+                long duracionEvento = 5000 + (long) (Math.random() * 5000);
 
+                //Duración del evento (Añadimos un bucle para que RMI vea bajar el tiempo)
+                tiempoRestante = (int) (duracionEvento / 1000);
+
+                while (tiempoRestante > 0) {
+                    Thread.sleep(1000);
+                    tiempoRestante--; // Le restamos 1 segundo
+                }
                 // 4. Terminar evento
                 desactivarEventos();
             }
@@ -58,19 +94,23 @@ public class GestorEventos extends Thread {
         switch (tipo) {
             case 0:
                 apagonActivo = true;
+                nombreEventoActual = "Apagón";
                 log.escribir("APAGÓN DEL LABORATORIO");
                 break;
             case 1:
                 tormentaActiva = true;
+                nombreEventoActual = "Tormenta";
                 log.escribir("TORMENTA DEL UPSIDE DOWN");
                 break;
             case 2:
                 elevenActiva = true;
+                nombreEventoActual = "Milagro Eleven";
                 log.escribir("INTERVENCIÓN DE ELEVEN");
                 ejecutarMilagroEleven(); // Eleven actúa de inmediato
                 break;
             case 3:
                 redMentalActiva = true;
+                nombreEventoActual = "Red Mental";
                 log.escribir("LA RED MENTAL");
                 break;
         }
@@ -78,39 +118,39 @@ public class GestorEventos extends Thread {
 
     private synchronized void desactivarEventos() {
         if (apagonActivo) {
-        log.escribir("FIN EVENTO: El Apagón ha acabado, los portales se reactivan.");
-        apagonActivo = false;
-        // Avisamos a todos los portales de que pueden despertar a los niños
-        for (Portal p : portales) {
-            p.finApagon();
+            log.escribir("FIN EVENTO: El Apagón ha acabado, los portales se reactivan.");
+            apagonActivo = false;
+            for (Portal p : portales) {
+                p.finApagon();
+            }
         }
-    }
-        if (apagonActivo) log.escribir("FIN EVENTO: El Apagón ha acabado");
-        if (tormentaActiva) log.escribir("FIN EVENTO: La Tormenta ha acabado");
-        if (elevenActiva) log.escribir("FIN EVENTO: Eleven deja de usar sus poderes");
-        if (redMentalActiva) log.escribir("FIN EVENTO: La Red Mental se desconecta");
+        if (tormentaActiva) {
+            log.escribir("FIN EVENTO: La Tormenta ha acabado");
+        }
+        if (elevenActiva) {
+            log.escribir("FIN EVENTO: Eleven deja de usar sus poderes");
+        }
+        if (redMentalActiva) {
+            log.escribir("FIN EVENTO: La Red Mental se desconecta");
+        }
 
         apagonActivo = false;
         tormentaActiva = false;
         elevenActiva = false;
         redMentalActiva = false;
+        nombreEventoActual = "Sin evento activo";
     }
 
     private void ejecutarMilagroEleven() {
-        int sangreDisponible = sangreVecna.get(); // Leemos del AtomicInteger
-        
+        int sangreDisponible = sangreVecna.get();
         if (sangreDisponible > 0) {
-            // Saca a los niños de la colmena[cite: 2]
             ArrayList<Niño> rescatados = colmena.rescatarNiños(sangreDisponible);
-            
             if (!rescatados.isEmpty()) {
-                // Restamos la sangre gastada de forma segura
-                sangreVecna.addAndGet(-rescatados.size()); 
+                sangreVecna.addAndGet(-rescatados.size());
                 log.escribir("Eleven rescata a " + rescatados.size() + " niños. Sangre restante: " + sangreVecna.get());
-                
                 for (Niño n : rescatados) {
-                    callePrincipal.entrar(n); // Vuelven a la zona segura[cite: 2]
-                    n.serLiberado(); // Los despertamos de su wait()
+                    callePrincipal.entrar(n);
+                    n.serLiberado();
                 }
             }
         }
