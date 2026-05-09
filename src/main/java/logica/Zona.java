@@ -36,8 +36,8 @@ public class Zona {
         niños.add(n);
     }
 
-    public void salir(Niño n) {
-        niños.remove(n);
+    public boolean salir(Niño n) {
+       return niños.remove(n);
     }
 
     public void entrar(Demogorgon d) {

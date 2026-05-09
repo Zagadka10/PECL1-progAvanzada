@@ -33,16 +33,26 @@ public class Niño extends Thread {
     }
 
     public synchronized void serCapturado() {
-        this.capturado = true;
+        // El Demogorgon llama aquí. Solo ponemos la bandera, SIN wait().
+        this.capturado = true; 
+    }
+
+    //El niño lo llama para congelarse a sí mismo
+    public synchronized void esperarRescate() {
         try {
-            while (this.capturado) {// Si Eleven lo pone a false antes de llegar aquí, no entra al wait
+            while (this.capturado) {
                 this.wait(); 
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
     }
-
+    
+    //Demogorgon compruebe si ya lo ha cazado otro
+    public boolean isCapturado() {
+        return capturado;
+    }
+    
     public synchronized void serLiberado() {
         this.capturado = false;
         this.notifyAll(); //envolver el rescate en el mismo objeto de sincronizacion

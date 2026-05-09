@@ -19,7 +19,7 @@ public class Demogorgon extends Thread {
     private final CopyOnWriteArrayList<Demogorgon> listaDemogorgons; // Añade este atributo
 
     // Constructor actualizado
-    public Demogorgon(String id, ArrayList<Zona> zonasUpsideDown, Zona colmena, 
+    public Demogorgon(String id, ArrayList<Zona> zonasUpsideDown, Zona colmena,
             HawkinsLog log, GestorEventos gestor, AtomicInteger capturas, CopyOnWriteArrayList<Demogorgon> listaDemogorgons) {
         this.id = id;
         this.zonasUpsideDown = zonasUpsideDown;
@@ -43,7 +43,7 @@ public class Demogorgon extends Thread {
     public Zona getZonaActual() {
         return zonaActual;
     }
-    
+
     public int getCapturasIndividuales() {
         return capturasIndividuales;
     }
@@ -52,7 +52,7 @@ public class Demogorgon extends Thread {
     public void run() {
         try {
             while (!Thread.currentThread().isInterrupted()) {
-                
+
                 //Pausa ddesde el modulo remoto
                 gestor.comprobarPausa();
                 // EVENTO: INTERVENCIÓN DE ELEVEN (Parálisis total)
@@ -129,30 +129,33 @@ public class Demogorgon extends Thread {
         boolean capturaExitosa = (random.nextInt(3) == 0); // 1/3 de probabilidad de éxito
 
         if (capturaExitosa) {
-            zonaActual.salir(objetivo);
-            colmena.entrar(objetivo);
-            objetivo.serCapturado();    
+            if (!objetivo.isCapturado() && zonaActual.salir(objetivo)) {
+                colmena.entrar(objetivo);
+                objetivo.serCapturado();
 
-            long tiempoDeposito = 500 + random.nextInt(501);
-            Thread.sleep(tiempoDeposito);
+                long tiempoDeposito = 500 + random.nextInt(501);
+                Thread.sleep(tiempoDeposito);
 
-            capturasIndividuales++; //guardamos las individuales
+                capturasIndividuales++; //guardamos las individuales
 
-            // Suma 1 de forma segura y obtiene el total exacto en ese milisegundo
-            int total = capturas.incrementAndGet();
-            log.escribir(id + " ha capturado a " + objetivo.getIdNino() + ". (Captura Global: " + total + ")");
+                // Suma 1 de forma segura y obtiene el total exacto en ese milisegundo
+                int total = capturas.incrementAndGet();
+                log.escribir(id + " ha capturado a " + objetivo.getIdNino() + ". (Captura Global: " + total + ")");
 
-            // Si el total es múltiplo de 8, invocamos a un nuevo Demogorgon
-            if (total % 8 == 0) {
-                // Calculamos el nuevo ID (D0001, D0002...) basándonos en la división
-                int nuevoIdNum = total / 8;
-                String nuevoId = String.format("D%04d", nuevoIdNum);
+                // Si el total es múltiplo de 8, invocamos a un nuevo Demogorgon
+                if (total % 8 == 0) {
+                    // Calculamos el nuevo ID (D0001, D0002...) basándonos en la división
+                    int nuevoIdNum = total / 8;
+                    String nuevoId = String.format("D%04d", nuevoIdNum);
 
-                // El Demogorgon instancia al nuevo clon pasándole los mismos recursos compartidos
-                Demogorgon nuevoDemo = new Demogorgon(nuevoId, zonasUpsideDown, colmena, log, gestor, capturas, listaDemogorgons);
-                listaDemogorgons.add(nuevoDemo);
-                nuevoDemo.start();
-                log.escribir(id + " ha capturado a " + objetivo.getIdNino() + " (capturas: " + capturas + ")");
+                    // El Demogorgon instancia al nuevo clon pasándole los mismos recursos compartidos
+                    Demogorgon nuevoDemo = new Demogorgon(nuevoId, zonasUpsideDown, colmena, log, gestor, capturas, listaDemogorgons);
+                    listaDemogorgons.add(nuevoDemo);
+                    nuevoDemo.start();
+                    log.escribir(id + " ha capturado a " + objetivo.getIdNino() + " (capturas: " + capturas + ")");
+                }
+            } else {
+                log.escribir(id + " intentó capturar a " + objetivo.getIdNino() + " pero ya no estaba.");
             }
         }
     }
