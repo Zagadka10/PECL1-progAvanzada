@@ -71,4 +71,25 @@ public class Zona {
         }
         return rescatados;
     }
+    // Devuelve un texto con los IDs de los niños (Ej: "N0001, N0002")
+    public synchronized String getListaIdsNinos() {
+        if (niños.isEmpty()) return "";
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < niños.size(); i++) {
+            sb.append(niños.get(i).getIdNino());
+            if (i < niños.size() - 1) sb.append(", ");
+        }
+        return sb.toString();
+    }
+
+    // Devuelve un texto con los IDs de los demogorgons (Ej: "D0000, D0001")
+    public synchronized String getListaIdsDemos() {
+        if (demos.isEmpty()) return "";
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < demos.size(); i++) {
+            sb.append(demos.get(i).getIdentificador());
+            if (i < demos.size() - 1) sb.append(", ");
+        }
+        return sb.toString();
+    }
 }

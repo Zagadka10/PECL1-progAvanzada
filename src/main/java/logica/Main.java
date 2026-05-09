@@ -83,6 +83,9 @@ public class Main {
         }
 
         gestor.start();
+        // --- ABRIR LA INTERFAZ PRINCIPAL DEL SERVIDOR ---
+        ServidorGUI ventanaPrincipal = new ServidorGUI(todasLasZonas, sangreVecna);
+        ventanaPrincipal.setVisible(true);
 
         // DEMOGORGON ALPHA
         Demogorgon alpha = new Demogorgon("D0000", zonasUpsideDown, colmena, log, gestor, capturasTotales, listaDemogorgons);
