@@ -1,4 +1,5 @@
 logica\GestorEventos.class
+cliente\MainCliente.class
 logica\Niño.class
 comun\InterfaceHawkins.class
 logica\Zona.class
