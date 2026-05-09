@@ -8,6 +8,7 @@ logica\GestorEventos.class
 cliente\MainCliente.class
 cliente\ClienteGUI$1.class
 logica\Servidor$1.class
+logica\ServidorGUI.class
 logica\Zona.class
 logica\Servidor.class
 logica\Main.class
