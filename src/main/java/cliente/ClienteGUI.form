@@ -133,7 +133,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="totalNi&#xf1;os">
           <Properties>
-            <Property name="text" type="java.lang.String" value="jLabel2"/>
+            <Property name="text" type="java.lang.String" value="N"/>
           </Properties>
         </Component>
       </SubComponents>
@@ -231,22 +231,22 @@
         </Component>
         <Component class="javax.swing.JLabel" name="portal1">
           <Properties>
-            <Property name="text" type="java.lang.String" value="jLabel6"/>
+            <Property name="text" type="java.lang.String" value="x"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="portal2">
           <Properties>
-            <Property name="text" type="java.lang.String" value="jLabel6"/>
+            <Property name="text" type="java.lang.String" value="x"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="portal3">
           <Properties>
-            <Property name="text" type="java.lang.String" value="jLabel6"/>
+            <Property name="text" type="java.lang.String" value="x"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="portal4">
           <Properties>
-            <Property name="text" type="java.lang.String" value="jLabel7"/>
+            <Property name="text" type="java.lang.String" value="x"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel6">
@@ -460,47 +460,47 @@
         </Component>
         <Component class="javax.swing.JLabel" name="ni&#xf1;osBosque">
           <Properties>
-            <Property name="text" type="java.lang.String" value="jLabel21"/>
+            <Property name="text" type="java.lang.String" value="n"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="ni&#xf1;osLab">
           <Properties>
-            <Property name="text" type="java.lang.String" value="jLabel21"/>
+            <Property name="text" type="java.lang.String" value="n"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="ni&#xf1;osCC">
           <Properties>
-            <Property name="text" type="java.lang.String" value="jLabel21"/>
+            <Property name="text" type="java.lang.String" value="n"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="ni&#xf1;osAlcantarillado">
           <Properties>
-            <Property name="text" type="java.lang.String" value="jLabel21"/>
+            <Property name="text" type="java.lang.String" value="n"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="ni&#xf1;osColmena">
           <Properties>
-            <Property name="text" type="java.lang.String" value="jLabel21"/>
+            <Property name="text" type="java.lang.String" value="n"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="demogorgonsBosque">
           <Properties>
-            <Property name="text" type="java.lang.String" value="jLabel21"/>
+            <Property name="text" type="java.lang.String" value="d"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="demogorgonsLab">
           <Properties>
-            <Property name="text" type="java.lang.String" value="jLabel21"/>
+            <Property name="text" type="java.lang.String" value="d"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="demogorgonsCC">
           <Properties>
-            <Property name="text" type="java.lang.String" value="jLabel21"/>
+            <Property name="text" type="java.lang.String" value="d"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="demogorgonsAlcantarillado">
           <Properties>
-            <Property name="text" type="java.lang.String" value="jLabel21"/>
+            <Property name="text" type="java.lang.String" value="d"/>
           </Properties>
         </Component>
       </SubComponents>

@@ -154,7 +154,7 @@ public class ClienteGUI extends javax.swing.JFrame {
 
         jLabel1.setText("TOTAL NIÑOS EN HAWKINS:");
 
-        totalNiños.setText("jLabel2");
+        totalNiños.setText("N");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -190,13 +190,13 @@ public class ClienteGUI extends javax.swing.JFrame {
 
         jLabel5.setText("Portal 4");
 
-        portal1.setText("jLabel6");
+        portal1.setText("x");
 
-        portal2.setText("jLabel6");
+        portal2.setText("x");
 
-        portal3.setText("jLabel6");
+        portal3.setText("x");
 
-        portal4.setText("jLabel7");
+        portal4.setText("x");
 
         jLabel6.setText("niños");
 
@@ -281,23 +281,23 @@ public class ClienteGUI extends javax.swing.JFrame {
 
         jLabel20.setText("BOSQUE");
 
-        niñosBosque.setText("jLabel21");
+        niñosBosque.setText("n");
 
-        niñosLab.setText("jLabel21");
+        niñosLab.setText("n");
 
-        niñosCC.setText("jLabel21");
+        niñosCC.setText("n");
 
-        niñosAlcantarillado.setText("jLabel21");
+        niñosAlcantarillado.setText("n");
 
-        niñosColmena.setText("jLabel21");
+        niñosColmena.setText("n");
 
-        demogorgonsBosque.setText("jLabel21");
+        demogorgonsBosque.setText("d");
 
-        demogorgonsLab.setText("jLabel21");
+        demogorgonsLab.setText("d");
 
-        demogorgonsCC.setText("jLabel21");
+        demogorgonsCC.setText("d");
 
-        demogorgonsAlcantarillado.setText("jLabel21");
+        demogorgonsAlcantarillado.setText("d");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);

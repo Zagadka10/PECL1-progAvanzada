@@ -28,6 +28,7 @@ public class GestorEventos extends Thread {
         this.callePrincipal = callePrincipal;
         this.sangreVecna = sangreVecna;
         this.portales = portales;
+        this.setDaemon(true);
     }
 
     // Getters sincronizados para que los hilos consulten qué pasa
@@ -64,7 +65,6 @@ public class GestorEventos extends Thread {
         }
     }
 
-    // 
     public synchronized void comprobarPausa() throws InterruptedException {
         while (pausado) {
             this.wait(); // Si hay pausa, el hilo que llame a esto se queda congelado
@@ -77,7 +77,7 @@ public class GestorEventos extends Thread {
             while (!Thread.currentThread().isInterrupted()) {
                 comprobarPausa();
                 
-                // 1. Tiempo entre eventos: Bucle de 1 en 1 segundo
+                // Tiempo entre eventos: Bucle de 1 en 1 segundo
                 long tiempoEspera = 30 + (long) (Math.random() * 30); // 30 a 60 seg
                 while (tiempoEspera > 0) {
                     comprobarPausa(); // Escucha al botón cada segundo
@@ -85,11 +85,11 @@ public class GestorEventos extends Thread {
                     tiempoEspera--;
                 }
 
-                // 2. Elegir un evento al azar
+                // Elegir un evento al azar
                 int tipoEvento = (int) (Math.random() * 4);
                 activarEvento(tipoEvento);
 
-                // 3. Duración del evento 
+                // Duración del evento 
                 long duracionEvento = 5 + (long) (Math.random() * 5); // 5 a 10 seg
                 tiempoRestante = (int) duracionEvento;
 
@@ -99,7 +99,7 @@ public class GestorEventos extends Thread {
                     tiempoRestante--; 
                 }
                 
-                // 4. Terminar evento
+                // Terminar evento
                 desactivarEventos();
             }
         } catch (InterruptedException e) {

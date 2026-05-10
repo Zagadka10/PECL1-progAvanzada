@@ -5,9 +5,9 @@ import java.util.ArrayList;
 
 public class Zona {
 
-    private String id;
-    private CopyOnWriteArrayList<Niño> niños = new CopyOnWriteArrayList<>();
-    private CopyOnWriteArrayList<Demogorgon> demos = new CopyOnWriteArrayList<>();
+    private final String id;
+    private final CopyOnWriteArrayList<Niño> niños = new CopyOnWriteArrayList<>();
+    private final CopyOnWriteArrayList<Demogorgon> demos = new CopyOnWriteArrayList<>();
 
     public Zona(String id) {
         this.id = id;
@@ -71,7 +71,7 @@ public class Zona {
         }
         return rescatados;
     }
-    // Devuelve un texto con los IDs de los niños (Ej: "N0001, N0002")
+    // Devuelve un texto con los IDs de los niños 
     public synchronized String getListaIdsNinos() {
         if (niños.isEmpty()) return "";
         StringBuilder sb = new StringBuilder();
@@ -82,7 +82,7 @@ public class Zona {
         return sb.toString();
     }
 
-    // Devuelve un texto con los IDs de los demogorgons (Ej: "D0000, D0001")
+    // Devuelve un texto con los IDs de los demogorgons 
     public synchronized String getListaIdsDemos() {
         if (demos.isEmpty()) return "";
         StringBuilder sb = new StringBuilder();
