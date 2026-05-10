@@ -103,8 +103,13 @@ public class Main {
 
             try {
                 // Intervalo aleatorio de entre 0,5 y 2 segundos (500 a 2000 milisegundos)
+                gestor.comprobarPausa();
                 long tiempoEspera = 500 + (long) (Math.random() * 1501);
-                Thread.sleep(tiempoEspera);
+                while (tiempoEspera > 0) {
+                    gestor.comprobarPausa(); // Escucha al botón de pausa
+                    Thread.sleep(100);
+                    tiempoEspera -= 100;
+                }
             } catch (InterruptedException e) {
                 System.out.println("Interrupción en la creación de niños: " + e.getMessage());
             }

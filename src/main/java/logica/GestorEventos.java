@@ -75,26 +75,30 @@ public class GestorEventos extends Thread {
     public void run() {
         try {
             while (!Thread.currentThread().isInterrupted()) {
-                //Pararmos eventos tambien
                 comprobarPausa();
-                // 1. Tiempo entre eventos: 30 a 60 segundos
-                long tiempoEspera = 30000 + (long) (Math.random() * 30000);
-                Thread.sleep(tiempoEspera);
+                
+                // 1. Tiempo entre eventos: Bucle de 1 en 1 segundo
+                long tiempoEspera = 30 + (long) (Math.random() * 30); // 30 a 60 seg
+                while (tiempoEspera > 0) {
+                    comprobarPausa(); // Escucha al botón cada segundo
+                    Thread.sleep(1000);
+                    tiempoEspera--;
+                }
 
-                // 2. Elegir un evento al azar (0 a 3)
+                // 2. Elegir un evento al azar
                 int tipoEvento = (int) (Math.random() * 4);
                 activarEvento(tipoEvento);
 
-                // 3. Duración del evento: 5 a 10 segundos[cite: 2]
-                long duracionEvento = 5000 + (long) (Math.random() * 5000);
-
-                //Duración del evento (Añadimos un bucle para que RMI vea bajar el tiempo)
-                tiempoRestante = (int) (duracionEvento / 1000);
+                // 3. Duración del evento 
+                long duracionEvento = 5 + (long) (Math.random() * 5); // 5 a 10 seg
+                tiempoRestante = (int) duracionEvento;
 
                 while (tiempoRestante > 0) {
+                    comprobarPausa(); // ¡ESTO CONGELA EL RELOJ DE TU GUI!
                     Thread.sleep(1000);
-                    tiempoRestante--; // Le restamos 1 segundo
+                    tiempoRestante--; 
                 }
+                
                 // 4. Terminar evento
                 desactivarEventos();
             }

@@ -78,14 +78,18 @@ public class Demogorgon extends Thread {
                         realizarAtaque(objetivo);
                     }
                 } else {
-                    long tiempoPatrulla = 4000 + random.nextInt(1001);
+                    long tiempoPatrullaSegundos = 4 + random.nextInt(2); // 4 a 5 segs
 
-                    // EVENTO: TORMENTA (Tiempo entre ataques/patrulla se reduce a la mitad)
                     if (gestor.isTormentaActiva()) {
-                        tiempoPatrulla /= 2;
+                        tiempoPatrullaSegundos /= 2;
                     }
-
-                    Thread.sleep(tiempoPatrulla);
+                    
+                    // El monstruo comprueba la pausa en cada paso de su patrulla
+                    while (tiempoPatrullaSegundos > 0) {
+                        gestor.comprobarPausa();
+                        Thread.sleep(1000);
+                        tiempoPatrullaSegundos--;
+                    }
                 }
             }
         } catch (InterruptedException e) {

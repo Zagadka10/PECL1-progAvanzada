@@ -578,30 +578,24 @@ public class ClienteGUI extends javax.swing.JFrame {
 
     private void botonDetenerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonDetenerActionPerformed
                                            
-        // Leemos el texto actual del botón
         String textoActual = botonDetener.getText();
         
         try {
-            if (textoActual.equals("Pausar Simulación")) {
-                // Cambiamos el texto al modo contrario
-                botonDetener.setText("Reanudar Simulación");
+            
+            if (textoActual.equals("Pausar Simulación") || textoActual.equals("Detener Simulación")) {
                 
-                // la llamada al servidor RMI 
+                botonDetener.setText("Reanudar Simulación");
                 servidor.pausarSimulacion(); 
                 System.out.println("Has pausado la simulación.");
                 
             } else {
-                // Volvemos al texto original
                 botonDetener.setText("Pausar Simulación");
-                
-                // llamada RMI para reanudar
                 servidor.reanudarSimulacion();
-                
                 System.out.println("Has reanudado la simulación.");
             }
         } catch (Exception e) {
             System.out.println("Error al intentar controlar la simulación.");
-        } 
+        }
     }//GEN-LAST:event_botonDetenerActionPerformed
 
     /**
