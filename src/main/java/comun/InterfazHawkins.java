@@ -22,17 +22,16 @@ public interface InterfazHawkins extends Remote{
     // UPSIDE DOWN
     int getNumeroNinosEnZona(String nombreZona) throws RemoteException;
     int getNumeroDemogorgonsEnZona(String nombreZona) throws RemoteException;
-
-    // --- TOP 3 DEMOGORGONS --- (Para tus JLabels demogorgon1, capturas1, etc.)
+    // TOP 3
     // La posición será 1, 2 o 3. Separamos el nombre de las capturas para tus labels
     String getNombreTopDemogorgon(int posicion) throws RemoteException;
     int getCapturasTopDemogorgon(int posicion) throws RemoteException;
 
-    // --- EVENTOS --- (Para tus JLabels tipoEvento, tiempoRestanteEvento)
+    // EVENTOS 
     String getTipoEventoActivo() throws RemoteException;
     int getTiempoRestanteEvento() throws RemoteException; 
 
-    // --- CONTROL DE SIMULACIÓN --- (Para tu botonDetener)
+    // CONTROL DE SIMULACIÓN 
     void pausarSimulacion() throws RemoteException;
     void reanudarSimulacion() throws RemoteException;
 }

@@ -14,17 +14,15 @@ public class Portal {
 
     private final ReentrantLock cerrojo = new ReentrantLock();
     // Colas de espera
-    private final Condition esperaFormarGrupo = cerrojo.newCondition();
     private final Condition esperaCruzarBajada = cerrojo.newCondition();
     private final Condition esperaSubida = cerrojo.newCondition();
     Condition esperaApagon = cerrojo.newCondition();
 
     // Contadores de estado
-    private int niñosEsperandoBajar = 0;
+    private final int niñosEsperandoBajar = 0;
     private int niñosCruzandoBajada = 0;
     private int niñosVuelta = 0;
     private boolean portalOcupado = false;
-    private boolean grupoCruzando = false;
 
     private HawkinsLog log;
     private final GestorEventos gestor;

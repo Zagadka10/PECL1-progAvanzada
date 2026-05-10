@@ -14,9 +14,9 @@ public class Demogorgon extends Thread {
     private Zona zonaActual;
     private final Random random;
     private final HawkinsLog log;
-    private final GestorEventos gestor; // Atributo añadido
+    private final GestorEventos gestor; 
     private int capturasIndividuales;
-    private final CopyOnWriteArrayList<Demogorgon> listaDemogorgons; // Añade este atributo
+    private final CopyOnWriteArrayList<Demogorgon> listaDemogorgons; 
 
     // Constructor actualizado
     public Demogorgon(String id, ArrayList<Zona> zonasUpsideDown, Zona colmena,
@@ -148,7 +148,7 @@ public class Demogorgon extends Thread {
 
                 // Si el total es múltiplo de 8, invocamos a un nuevo Demogorgon
                 if (total % 8 == 0) {
-                    // Calculamos el nuevo ID (D0001, D0002...) basándonos en la división
+                    // Calculamos el nuevo ID 
                     int nuevoIdNum = total / 8;
                     String nuevoId = String.format("D%04d", nuevoIdNum);
 

@@ -15,7 +15,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import comun.InterfazHawkins;
 import static java.util.Collections.sort;
 import java.util.Comparator;
-import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -145,16 +144,5 @@ public class Servidor extends UnicastRemoteObject implements InterfazHawkins {
     @Override
     public void reanudarSimulacion() throws RemoteException {
         gestor.setPausado(false);
-    }
-
-    // Métodos GUI pueda necesitar
-    //@Override
-    public int getSangreVecna() throws RemoteException {
-        return sangreVecna.get();
-    }
-
-    //@Override
-    public int getCapturasTotales() throws RemoteException {
-        return capturasTotales.get();
     }
 }
